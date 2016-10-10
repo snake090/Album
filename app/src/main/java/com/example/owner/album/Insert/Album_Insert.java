@@ -1,4 +1,4 @@
-package com.example.owner.album;
+package com.example.owner.album.Insert;
 
 import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Album_Name_Related_Words;
@@ -11,13 +11,11 @@ import io.realm.RealmObject;
  * Created by Owner on 2016/10/10.
  */
 
-public class Insert {
+public class Album_Insert {
     public void Insert_DB() {
         Realm r = Realm.getDefaultInstance();
 
-        // トランザクション開始
         r.beginTransaction();
-
 
         Album album1 = r.createObject(Album.class, 1);
         album1.setAlbum_name("動物");
@@ -50,10 +48,6 @@ public class Insert {
             album_name_related_wordsesList2.add(album_name_related_words2[i]);
         }
         album2.setAlbum_name_related_wordses(album_name_related_wordsesList2);
-
-
-
-
 
         r.commitTransaction();
         r.close();

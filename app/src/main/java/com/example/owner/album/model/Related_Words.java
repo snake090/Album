@@ -12,17 +12,11 @@ import io.realm.annotations.Required;
 
 public class Related_Words extends RealmObject {
 
-    @PrimaryKey
-    private int related_words_id;
     @Required
     @Index
     private String related_words;
 
 
-
-    public void setRelated_words_id(int related_words_id) {
-        this.related_words_id = related_words_id;
-    }
 
     public void setRelated_words(String related_words) {
         this.related_words = related_words;

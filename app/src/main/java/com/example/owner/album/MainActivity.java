@@ -12,11 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.example.owner.album.Insert.Album_Insert;
+import com.example.owner.album.Insert.Picture_Insert;
 import com.example.owner.album.model.Book;
 import com.example.owner.album.model.BookShelf;
 import com.facebook.stetho.Stetho;
@@ -25,7 +24,6 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 
 
@@ -156,8 +154,11 @@ public class MainActivity extends AppCompatActivity
 
     private void createBookShelf() {
 
-        Insert insert=new Insert();
+        Album_Insert insert=new Album_Insert();
         insert.Insert_DB();
+
+        Picture_Insert insert1=new Picture_Insert();
+        insert1.Insert_DB();
 
         Realm r = Realm.getDefaultInstance();
 
