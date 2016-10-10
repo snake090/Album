@@ -2,36 +2,47 @@ package com.example.owner.album;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    
+
+    @BindView(R.id.button_create)
+    Button buttonCreate;
+    @BindView(R.id.button_delete)
+    Button buttonDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,7 +65,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -63,6 +73,7 @@ public class MainActivity extends AppCompatActivity
 
 
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
+
     }
 
     @Override
@@ -122,21 +133,60 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-    private RealmConfiguration buildRealmConfiguration() {
-        return new RealmConfiguration.Builder(this)
-                .schemaVersion(1L)
-                .migration(new RealmMigration() {
-                    @Override
-                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-                        if (oldVersion == 0L) {
-                            final RealmObjectSchema tweetSchema = realm.getSchema().get("Tweet");
-                            tweetSchema.addField("favorited", boolean.class);
-                            //noinspection UnusedAssignment
-                            oldVersion++;
-                        }
-                    }
-                })
-                .build();
+        buttonCreate.setOnClickListener(v -> {
+            Log.d("AAA", "Created");
+            createBookShelf();
+        });
+
+        buttonDelete.setOnClickListener(v -> {
+            Log.d("AAA", "Deleted");
+            deleteBookShelf();
+        });
     }
+
+    private void createBookShelf() {
+        Realm r = Realm.getDefaultInstance();
+
+        // トランザクション開始
+        r.beginTransaction();
+
+        Book b = r.createObject(Book.class);
+        b.setTitle("Extreme Programming");
+        b.setAuthor("Kent Beck");
+        b.setPages(181);
+
+        Book b2 = r.createObject(Book.class);
+        b2.setTitle("アジャイルサムライ");
+        b2.setAuthor("Jonathan Rasmusson");
+        b2.setPages(316);
+
+        RealmList<Book> bookList = new RealmList<>();
+        bookList.add(b);
+        bookList.add(b2);
+
+        BookShelf shelf = r.createObject(BookShelf.class);
+        shelf.setBooks(bookList);
+
+        r.commitTransaction();
+        // トランザクション終了
+
+        r.close();
+    }
+
+    private void deleteBookShelf() {
+        Realm r = Realm.getDefaultInstance();
+
+        r.executeTransactionAsync(realm -> {
+            realm.deleteAll();
+        });
+
+
+    }
+
+
+
 }
