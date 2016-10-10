@@ -1,4 +1,4 @@
-package com.example.owner.album;
+package com.example.owner.album.model;
 
 import io.realm.RealmObject;
 

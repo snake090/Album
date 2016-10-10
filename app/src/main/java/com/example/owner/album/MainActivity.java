@@ -15,17 +15,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.owner.album.model.Book;
+import com.example.owner.album.model.BookShelf;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.DynamicRealm;
+
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
+
 import io.realm.RealmList;
-import io.realm.RealmMigration;
-import io.realm.RealmObjectSchema;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -72,7 +72,18 @@ public class MainActivity extends AppCompatActivity
                         .build());
 
 
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
+        buttonCreate.setOnClickListener(v -> {
+            Log.d("AAA", "Created");
+            createBookShelf();
+        });
+
+
+        buttonDelete.setOnClickListener(v -> {
+            Log.d("AAA", "Deleted");
+            deleteBookShelf();
+        });
+
+        Realm.init(this);
 
     }
 
@@ -133,20 +144,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        buttonCreate.setOnClickListener(v -> {
-            Log.d("AAA", "Created");
-            createBookShelf();
-        });
-
-        buttonDelete.setOnClickListener(v -> {
-            Log.d("AAA", "Deleted");
-            deleteBookShelf();
-        });
-    }
 
     private void createBookShelf() {
         Realm r = Realm.getDefaultInstance();
