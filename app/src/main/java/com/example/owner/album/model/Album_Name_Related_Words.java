@@ -12,14 +12,9 @@ import io.realm.annotations.Required;
 
 public class Album_Name_Related_Words extends RealmObject {
 
-    private int album_id;
     @Required
     @Index
     private String album_nmae_related_words;
-
-    public void setAlbum_id(int album_id) {
-        this.album_id = album_id;
-    }
 
     public void setAlbum_nmae_related_words(String album_nmae_related_words) {
         this.album_nmae_related_words = album_nmae_related_words;

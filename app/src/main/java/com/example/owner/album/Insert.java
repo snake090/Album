@@ -20,20 +20,17 @@ public class Insert {
 
 
         Album album1 = r.createObject(Album.class, 1);
-        album1.setPicture_id(1);
         album1.setAlbum_name("動物");
         album1.setGetAlbum_name_eng("animal");
 
         Album album2 = r.createObject(Album.class, 2);
-        album2.setPicture_id(2);
         album2.setAlbum_name("建造物");
         album2.setGetAlbum_name_eng("building");
 
         String words1[]={"insect","plant","birds","mammal","ecology"};
         Album_Name_Related_Words album_name_related_words1[]=new Album_Name_Related_Words[words1.length];
         for(int i=0;i<words1.length;i++){
-            album_name_related_words1[i]=r.createObject(Album_Name_Related_Words.class);
-            album_name_related_words1[i].setAlbum_id(1);
+            album_name_related_words1[i]=r.createObject(Album_Name_Related_Words.class);;
             album_name_related_words1[i].setAlbum_nmae_related_words(words1[i]);
         }
         RealmList<Album_Name_Related_Words> album_name_related_wordsesList1 = new RealmList<>();
@@ -46,7 +43,6 @@ public class Insert {
         Album_Name_Related_Words album_name_related_words2[]=new Album_Name_Related_Words[words2.length];
         for(int i=0;i<words2.length;i++){
             album_name_related_words2[i]=r.createObject(Album_Name_Related_Words.class);
-            album_name_related_words2[i].setAlbum_id(2);
             album_name_related_words2[i].setAlbum_nmae_related_words(words2[i]);
         }
         RealmList<Album_Name_Related_Words> album_name_related_wordsesList2 = new RealmList<>();

@@ -16,7 +16,6 @@ public class Picture_Info extends RealmObject {
     RealmList<Tag> tags;
     @PrimaryKey
     private int id;
-    private  int tag_id;
     @Required
     private String path;
     private Date date;
@@ -29,10 +28,6 @@ public class Picture_Info extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setTag_id(int tag_id) {
-        this.tag_id = tag_id;
     }
 
     public void setPath(String path) {

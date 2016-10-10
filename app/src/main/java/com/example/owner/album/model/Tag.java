@@ -13,9 +13,6 @@ public class Tag extends RealmObject {
 
     Classification_Info_Eng classification_info_engs;
     Classification_Info_Jap classification_info_japs;
-    @PrimaryKey
-    private int tag_id;
-    private int classification_id;
 
     public void setClassification_info_engs(Classification_Info_Eng classification_info_engs) {
         this.classification_info_engs = classification_info_engs;
@@ -25,11 +22,4 @@ public class Tag extends RealmObject {
         this.classification_info_japs = classification_info_japs;
     }
 
-    public void setTag_id(int tag_id) {
-        this.tag_id = tag_id;
-    }
-
-    public void setClassification_id(int classification_id) {
-        this.classification_id = classification_id;
-    }
 }

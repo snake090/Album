@@ -11,17 +11,11 @@ import io.realm.annotations.Required;
 
 public class Classification_Info_Jap extends RealmObject {
     RealmList<Related_Words> related_wordses;
-    @PrimaryKey
-    private int classification_id;
     @Required
     private String name;
 
     public void setRelated_wordses(RealmList<Related_Words> related_wordses) {
         this.related_wordses = related_wordses;
-    }
-
-    public void setClassification_id(int classification_id) {
-        this.classification_id = classification_id;
     }
 
     public void setName(String name) {

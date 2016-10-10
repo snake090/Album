@@ -15,7 +15,6 @@ public class Album extends RealmObject{
     RealmList<Picture_Info> picture_infos;
     @PrimaryKey
     private int album_id;
-    private int picture_id;
     @Required
     private String album_name;
     @Required
@@ -34,9 +33,6 @@ public class Album extends RealmObject{
         this.album_id = album_id;
     }
 
-    public void setPicture_id(int picture_id) {
-        this.picture_id = picture_id;
-    }
 
     public void setAlbum_name(String album_name) {
         this.album_name = album_name;
