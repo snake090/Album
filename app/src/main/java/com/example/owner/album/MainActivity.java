@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.owner.album.model.Book;
 import com.example.owner.album.model.BookShelf;
@@ -22,9 +24,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import io.realm.Realm;
-
 import io.realm.RealmList;
 
 
@@ -36,6 +36,14 @@ public class MainActivity extends AppCompatActivity
     Button buttonCreate;
     @BindView(R.id.button_delete)
     Button buttonDelete;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,25 +51,23 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+
+        fab.setOnClickListener(view ->  {
+
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -70,8 +76,6 @@ public class MainActivity extends AppCompatActivity
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
-
-
         buttonCreate.setOnClickListener(v -> {
             Log.d("AAA", "Created");
             createBookShelf();
@@ -84,6 +88,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         Realm.init(this);
+
+
 
     }
 
@@ -145,7 +151,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private void createBookShelf() {
         Realm r = Realm.getDefaultInstance();
 
@@ -184,7 +189,6 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
 
 
 }
