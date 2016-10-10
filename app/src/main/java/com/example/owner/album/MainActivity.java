@@ -26,7 +26,7 @@ import io.realm.RealmObjectSchema;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
