@@ -10,6 +10,8 @@ import io.realm.annotations.Required;
  */
 
 public class Album extends RealmObject{
+
+    RealmList<Album_Name_Related_Words> album_name_related_wordses;
     RealmList<Picture_Info> picture_infos;
     @PrimaryKey
     private int album_id;
@@ -18,6 +20,11 @@ public class Album extends RealmObject{
     private String album_name;
     @Required
     private String getAlbum_name_eng;
+
+
+    public void setAlbum_name_related_wordses(RealmList<Album_Name_Related_Words> album_name_related_wordses) {
+        this.album_name_related_wordses = album_name_related_wordses;
+    }
 
     public void setPicture_infos(RealmList<Picture_Info> picture_infos) {
         this.picture_infos = picture_infos;

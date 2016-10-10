@@ -1,5 +1,6 @@
 package com.example.owner.album.model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -9,14 +10,14 @@ import io.realm.annotations.Required;
  */
 
 public class Classification_Info_Eng extends RealmObject {
-    private Tag tag;
+    RealmList<Related_Words> related_wordses;
     @PrimaryKey
     private  int classification_id;
     @Required
     private String name;
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setRelated_wordses(RealmList<Related_Words> related_wordses) {
+        this.related_wordses = related_wordses;
     }
 
     public void setClassification_id(int classification_id) {

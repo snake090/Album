@@ -25,6 +25,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 
 
@@ -91,6 +92,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
+
     }
 
     @Override
@@ -152,6 +155,10 @@ public class MainActivity extends AppCompatActivity
 
 
     private void createBookShelf() {
+
+        Insert insert=new Insert();
+        insert.Insert_DB();
+
         Realm r = Realm.getDefaultInstance();
 
         // トランザクション開始

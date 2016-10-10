@@ -11,16 +11,11 @@ import io.realm.annotations.Required;
  */
 
 public class Album_Name_Related_Words extends RealmObject {
-    RealmList<Album> albums;
-    @PrimaryKey
+
     private int album_id;
     @Required
     @Index
     private String album_nmae_related_words;
-
-    public void setAlbums(RealmList<Album> albums) {
-        this.albums = albums;
-    }
 
     public void setAlbum_id(int album_id) {
         this.album_id = album_id;

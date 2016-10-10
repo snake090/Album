@@ -2,6 +2,7 @@ package com.example.owner.album.model;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -12,6 +13,7 @@ import io.realm.annotations.Required;
 
 public class Picture_Info extends RealmObject {
 
+    RealmList<Tag> tags;
     @PrimaryKey
     private int id;
     private  int tag_id;
@@ -20,6 +22,10 @@ public class Picture_Info extends RealmObject {
     private Date date;
     private String longitude;
     private String latitude;
+
+    public void setTags(RealmList<Tag> tags) {
+        this.tags = tags;
+    }
 
     public void setId(int id) {
         this.id = id;

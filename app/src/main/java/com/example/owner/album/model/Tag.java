@@ -11,13 +11,18 @@ import io.realm.annotations.Required;
 
 public class Tag extends RealmObject {
 
-    private RealmList<Picture_Info> picture_infos;
+    Classification_Info_Eng classification_info_engs;
+    Classification_Info_Jap classification_info_japs;
     @PrimaryKey
     private int tag_id;
     private int classification_id;
 
-    public void setPicture_infos(RealmList<Picture_Info> picture_infos) {
-        this.picture_infos = picture_infos;
+    public void setClassification_info_engs(Classification_Info_Eng classification_info_engs) {
+        this.classification_info_engs = classification_info_engs;
+    }
+
+    public void setClassification_info_japs(Classification_Info_Jap classification_info_japs) {
+        this.classification_info_japs = classification_info_japs;
     }
 
     public void setTag_id(int tag_id) {
