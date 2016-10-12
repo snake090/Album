@@ -45,4 +45,10 @@ public class Picture_Info extends RealmObject {
     public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
+
+    public String getPath() {
+        return path;
+    }
+
+
 }

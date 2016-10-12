@@ -19,4 +19,8 @@ public class Album_Name_Related_Words extends RealmObject {
     public void setAlbum_nmae_related_words(String album_nmae_related_words) {
         this.album_nmae_related_words = album_nmae_related_words;
     }
+
+    public String getAlbum_nmae_related_words() {
+        return album_nmae_related_words;
+    }
 }

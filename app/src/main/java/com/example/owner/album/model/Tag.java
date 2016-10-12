@@ -22,4 +22,5 @@ public class Tag extends RealmObject {
         this.classification_info_japs = classification_info_japs;
     }
 
+
 }

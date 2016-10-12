@@ -18,7 +18,7 @@ public class Album extends RealmObject{
     @Required
     private String album_name;
     @Required
-    private String getAlbum_name_eng;
+    private String Album_name_eng;
 
 
     public void setAlbum_name_related_wordses(RealmList<Album_Name_Related_Words> album_name_related_wordses) {
@@ -39,6 +39,18 @@ public class Album extends RealmObject{
     }
 
     public void setGetAlbum_name_eng(String getAlbum_name_eng) {
-        this.getAlbum_name_eng = getAlbum_name_eng;
+        this.Album_name_eng = getAlbum_name_eng;
+    }
+
+    public RealmList<Album_Name_Related_Words> getAlbum_name_related_wordses() {
+        return album_name_related_wordses;
+    }
+
+    public String getGetAlbum_name_eng() {
+        return Album_name_eng;
+    }
+
+    public RealmList<Picture_Info> getPicture_infos() {
+        return picture_infos;
     }
 }

@@ -13,18 +13,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.Insert.Picture_Insert;
-import com.example.owner.album.model.Book;
-import com.example.owner.album.model.BookShelf;
+import com.example.owner.album.model.Picture_Info;
+import com.example.owner.album.query.Album_Query;
+import com.example.owner.album.query.Picture_Query;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmList;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends AppCompatActivity
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+    @BindView(R.id.textView2)
+    TextView textView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        fab.setOnClickListener(view ->  {
+        fab.setOnClickListener(view -> {
 
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
@@ -87,9 +93,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         Realm.init(this);
-
-
-
 
 
     }
@@ -154,38 +157,21 @@ public class MainActivity extends AppCompatActivity
 
     private void createBookShelf() {
 
-        Album_Insert insert=new Album_Insert();
-        insert.Insert_DB();
-
-        Picture_Insert insert1=new Picture_Insert();
+        Picture_Insert insert1 = new Picture_Insert();
         insert1.Insert_DB();
 
-        Realm r = Realm.getDefaultInstance();
+        Album_Insert insert = new Album_Insert();
+        insert.Insert_DB();
+        Picture_Query query = new Picture_Query();
+        RealmResults<Picture_Info> results = query.Query();
 
-        // トランザクション開始
-        r.beginTransaction();
+        Album_Query query1 =new Album_Query();
+        ArrayList<String> path=query1.Path_Query(2);
+        Log.d("for",path.get(1));
+       // textView2.setText(results.get(0).getPath());
 
-        Book b = r.createObject(Book.class);
-        b.setTitle("Extreme Programming");
-        b.setAuthor("Kent Beck");
-        b.setPages(181);
 
-        Book b2 = r.createObject(Book.class);
-        b2.setTitle("アジャイルサムライ");
-        b2.setAuthor("Jonathan Rasmusson");
-        b2.setPages(316);
-
-        RealmList<Book> bookList = new RealmList<>();
-        bookList.add(b);
-        bookList.add(b2);
-
-        BookShelf shelf = r.createObject(BookShelf.class);
-        shelf.setBooks(bookList);
-
-        r.commitTransaction();
-        // トランザクション終了
-
-        r.close();
+ //       textView2.setText(results1.get(0).getPath());
     }
 
     private void deleteBookShelf() {
