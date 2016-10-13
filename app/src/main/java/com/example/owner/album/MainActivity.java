@@ -1,11 +1,13 @@
 package com.example.owner.album;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,10 +21,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.album.CloudVision.PermissionUtils;
 import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.Insert.Picture_Insert;
 import com.example.owner.album.model.Picture_Info;
@@ -45,6 +50,7 @@ import com.google.api.services.vision.v1.model.Image;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,11 +80,16 @@ public class MainActivity extends AppCompatActivity
  //   @BindView(R.id.textView2)
    // TextView textView2;
 
+
+    private TextView mImageDetails;
+    private ImageView mMainImage;
+
     private static final String CLOUD_VISION_API_KEY = "AIzaSyA9MVo_hv-TskogWCsuiLscq5c1pNufKDo";
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String FILE_NAME = "temp.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,21 +100,6 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-
-        fab.setOnClickListener(view -> {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder
-                    .setPositiveButton("gallery", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startGalleryChooser();
-                        }
-                    });
-
-            builder.create().show();
-
-        });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -132,7 +128,28 @@ public class MainActivity extends AppCompatActivity
 
         Realm.init(this);
 
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder
+                        .setMessage("")
+                        .setPositiveButton("gallery", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startGalleryChooser();
+                            }
+                        })
+                        .setNegativeButton("camera", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startCamera();
+                            }
+                        });
+                builder.create().show();
+            }
+        });
     }
 
     @Override
@@ -220,6 +237,7 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
+
     public void startGalleryChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -228,13 +246,46 @@ public class MainActivity extends AppCompatActivity
                 GALLERY_IMAGE_REQUEST);
     }
 
+    public void startCamera() {
+        if (PermissionUtils.requestPermission(
+                this,
+                CAMERA_PERMISSIONS_REQUEST,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+            startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
+        }
+    }
+
+    public File getCameraFile() {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return new File(dir, FILE_NAME);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             uploadImage(data.getData());
-
+        } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            uploadImage(Uri.fromFile(getCameraFile()));
+        }
     }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PermissionUtils.permissionGranted(
+                requestCode,
+                CAMERA_PERMISSIONS_REQUEST,
+                grantResults)) {
+            startCamera();
+        }
+    }
+
     public void uploadImage(Uri uri) {
         if (uri != null) {
             try {
@@ -245,17 +296,21 @@ public class MainActivity extends AppCompatActivity
                                 1200);
 
                 callCloudVision(bitmap);
+                mMainImage.setImageBitmap(bitmap);
 
             } catch (IOException e) {
                 Log.d(TAG, "Image picking failed because " + e.getMessage());
+  //              Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
             }
         } else {
             Log.d(TAG, "Image picker gave us a null image.");
+     //       Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
         }
     }
+
     private void callCloudVision(final Bitmap bitmap) throws IOException {
         // Switch text to loading
-
+     //   mImageDetails.setText(R.string.loading_message);
 
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
@@ -318,10 +373,11 @@ public class MainActivity extends AppCompatActivity
             }
 
             protected void onPostExecute(String result) {
-               Log.d("result",result);
+                mImageDetails.setText(result);
             }
         }.execute();
     }
+
     public Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 
         int originalWidth = bitmap.getWidth();
@@ -342,7 +398,6 @@ public class MainActivity extends AppCompatActivity
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
-    //関連情報取り出し
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
         String message = "I found these things:\n\n";
 
@@ -359,4 +414,14 @@ public class MainActivity extends AppCompatActivity
         return message;
     }
 
+
 }
+
+
+
+
+
+
+
+
+
