@@ -177,8 +177,6 @@ public class MainActivity extends AppCompatActivity
 
             //Log.d("longitude", hour);
             Exif exif = new Exif();
-            latitude = exif.ExifHourMinSecToDegrees(latitude);
-            longitude = exif.ExifHourMinSecToDegrees(longitude);
 
             if (latitude != null) {
                 latitude = exif.ExifHourMinSecToDegrees(latitude);
