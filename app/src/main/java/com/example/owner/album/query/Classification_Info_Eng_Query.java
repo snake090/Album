@@ -14,13 +14,7 @@ import io.realm.RealmResults;
  */
 
 public class Classification_Info_Eng_Query {
-    public RealmResults<Classification_Info_Eng>  Double_Check(){
-        Realm r = Realm.getDefaultInstance();
-        RealmResults<Classification_Info_Eng> realmResults=r.where(Classification_Info_Eng.class).findAll();
 
-        return  realmResults;
-
-    }
     public RealmResults<Classification_Info_Eng>  Double_Check(String name){
         Realm r = Realm.getDefaultInstance();
         RealmResults<Classification_Info_Eng> realmResults=r.where(Classification_Info_Eng.class).equalTo("name",name).findAll();

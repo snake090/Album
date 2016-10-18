@@ -26,7 +26,9 @@ import android.widget.TextView;
 
 import com.example.owner.album.Exif.Exif;
 import com.example.owner.album.Insert.Album_Insert;
+import com.example.owner.album.Insert.Classification_Info_Eng_Insert;
 import com.example.owner.album.Insert.Picture_Insert;
+import com.example.owner.album.Translate.TranslateResult;
 import com.example.owner.album.model.Picture_Info;
 import com.example.owner.album.query.Album_Query;
 import com.example.owner.album.query.Picture_Query;
@@ -44,6 +46,7 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.memetix.mst.translate.Translate;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
@@ -182,10 +185,10 @@ public class MainActivity extends AppCompatActivity
                 latitude = exif.ExifHourMinSecToDegrees(latitude);
             }
             if (longitude != null) {
-                longitude=exif.ExifHourMinSecToDegrees(longitude);
+                longitude = exif.ExifHourMinSecToDegrees(longitude);
             }
 
-            Picture_Insert.Insert_Picture(file.getPath(),dateTime,latitude,longitude);
+            Picture_Insert.Insert_Picture(file.getPath(), dateTime, latitude, longitude);
 
         }
     }
@@ -309,9 +312,11 @@ public class MainActivity extends AppCompatActivity
 
             protected void onPostExecute(ArrayList<String> result) {
 
-                Picture_Insert picture_insert=new Picture_Insert();
-                picture_insert.Insert_Classification_Info(result);
+                Classification_Info_Eng_Insert classification_Info_Eng_Insert=new Classification_Info_Eng_Insert();
+                classification_Info_Eng_Insert.Insert_Classification_Info(result);
 
+                TranslateResult translate = new TranslateResult(result);
+                translate.execute();
             }
         }.execute();
     }
