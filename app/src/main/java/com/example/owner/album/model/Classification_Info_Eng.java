@@ -21,4 +21,8 @@ public class Classification_Info_Eng extends RealmObject {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
 }

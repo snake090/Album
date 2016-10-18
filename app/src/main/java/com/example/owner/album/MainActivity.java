@@ -184,7 +184,9 @@ public class MainActivity extends AppCompatActivity
             if (longitude != null) {
                 longitude=exif.ExifHourMinSecToDegrees(longitude);
             }
-            Picture_Insert.Insert_Picture(file.getPath(), dateTime, latitude, longitude);
+
+            Picture_Insert.Insert_Picture(file.getPath(),dateTime,latitude,longitude);
+
         }
     }
 
@@ -304,22 +306,14 @@ public class MainActivity extends AppCompatActivity
                 return message;
             }
 
-            protected void onPreExecute() {
-                Log.d(TAG, "onPreExecute");
-
-            }
 
             protected void onPostExecute(ArrayList<String> result) {
 
-                ;
-                for (String info1 : result) {
-                    info.add(info1);
-                }
-                Log.d("main ", info.get(0));
+                Picture_Insert picture_insert=new Picture_Insert();
+                picture_insert.Insert_Classification_Info(result);
 
             }
         }.execute();
-        Log.d("main", "main");
     }
 
     private ArrayList<String> convertResponse(BatchAnnotateImagesResponse response) {

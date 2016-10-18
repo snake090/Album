@@ -13,7 +13,8 @@ import io.realm.annotations.Required;
 
 public class Picture_Info extends RealmObject {
 
-    RealmList<Tag> tags;
+    RealmList<Classification_Info_Eng> classification_info_engs;
+    RealmList<Classification_Info_Jap> classification_info_japs;
     @PrimaryKey
     private int id;
     @Required
@@ -22,8 +23,12 @@ public class Picture_Info extends RealmObject {
     private String longitude;
     private String latitude;
 
-    public void setTags(RealmList<Tag> tags) {
-        this.tags = tags;
+    public void setClassification_info_engs(RealmList<Classification_Info_Eng> classification_info_engs) {
+        this.classification_info_engs = classification_info_engs;
+    }
+
+    public void setClassification_info_japs(RealmList<Classification_Info_Jap> classification_info_japs) {
+        this.classification_info_japs = classification_info_japs;
     }
 
     public void setId(int id) {
