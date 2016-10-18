@@ -33,6 +33,9 @@ public class Album extends RealmObject{
         this.album_id = album_id;
     }
 
+    public int getAlbum_id() {
+        return album_id;
+    }
 
     public void setAlbum_name(String album_name) {
         this.album_name = album_name;

@@ -1,6 +1,7 @@
 package com.example.owner.album.Insert;
 
 
+import android.graphics.Picture;
 import android.net.ParseException;
 import android.util.Log;
 
@@ -10,10 +11,12 @@ import com.example.owner.album.model.Classification_Info_Jap;
 import com.example.owner.album.model.Picture_Info;
 import com.example.owner.album.model.Related_Words;
 import com.example.owner.album.model.Tag;
+import com.example.owner.album.query.Picture_Query;
 
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -25,11 +28,56 @@ import io.realm.RealmResults;
  */
 
 public class Picture_Insert {
-    public void Insert_DB() throws ParseException {
+    public static void Insert_Picture(String path ,String dateTime,String latitude,String longitude)throws ParseException{
+        Realm r = Realm.getDefaultInstance();
+        r.beginTransaction();
+
+        Picture_Query picture_query=new Picture_Query();
+        RealmResults<Picture_Info> realmList=picture_query.Id_Query();
+        if (realmList.size()==0l) {
+            Picture_Info pictureInfo1 = r.createObject(Picture_Info.class, 1);
+            pictureInfo1.setPath(path);
+
+            DateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
+            try {
+                java.util.Date date = format.parse(dateTime);
+                pictureInfo1.setDate(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            pictureInfo1.setLongitude(longitude);
+            pictureInfo1.setLatitude(latitude);
+        }else{
+            int id=realmList.get(0).getId();
+            Picture_Info pictureInfo1 = r.createObject(Picture_Info.class, id+1);
+            pictureInfo1.setPath(path);
+
+            DateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
+            try {
+                java.util.Date date = format.parse(dateTime);
+                pictureInfo1.setDate(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            pictureInfo1.setLongitude(longitude);
+            pictureInfo1.setLatitude(latitude);
+        }
+        r.commitTransaction();
+        r.close();
+    }
+    public void Insert_DB(ArrayList<String> classification_info_eng) throws ParseException {
         Realm r = Realm.getDefaultInstance();
 
         r.beginTransaction();
 
+        //分類情報
+        Classification_Info_Eng classification_info_eng1[]=new Classification_Info_Eng[classification_info_eng.size()];
+        for(int i=0;i<classification_info_eng1.length;i++){
+            classification_info_eng1[i]=r.createObject(Classification_Info_Eng.class);
+            classification_info_eng1[i].setName(classification_info_eng.get(i));
+        }
+
+/*
         //分類情報
         Classification_Info_Jap classification_info_jap1 = r.createObject(Classification_Info_Jap.class);
         classification_info_jap1.setName("パンダ");
@@ -260,6 +308,7 @@ public class Picture_Insert {
         pictureInfo3.setLongitude("35/1,50/1,3815/100");
         pictureInfo3.setLatitude("139/1,23/1,795/100");
 
+*/
         r.commitTransaction();
         r.close();
 

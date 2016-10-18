@@ -46,6 +46,10 @@ public class Picture_Info extends RealmObject {
         this.latitude = latitude;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getPath() {
         return path;
     }
