@@ -12,11 +12,11 @@ import java.util.ArrayList;
  * Created by Owner on 2016/10/19.
  */
 
-public class TranslateResult extends AsyncTask<Void, Void, ArrayList<String>> {
+public class TranslateEngToJap extends AsyncTask<Void, Void, ArrayList<String>> {
 
     private ArrayList<String> words;
 
-    public TranslateResult(ArrayList<String> word) {
+    public TranslateEngToJap(ArrayList<String> word) {
         super();
         words = word;
     }
