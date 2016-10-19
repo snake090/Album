@@ -1,17 +1,10 @@
 package com.example.owner.album.Insert;
 
 
-import android.graphics.Picture;
 import android.net.ParseException;
-import android.util.Log;
 
-import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Classification_Info_Eng;
-import com.example.owner.album.model.Classification_Info_Jap;
 import com.example.owner.album.model.Picture_Info;
-import com.example.owner.album.model.Related_Words;
-import com.example.owner.album.model.Tag;
-import com.example.owner.album.query.Classification_Info_Eng_Query;
 import com.example.owner.album.query.Picture_Query;
 
 
@@ -21,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 

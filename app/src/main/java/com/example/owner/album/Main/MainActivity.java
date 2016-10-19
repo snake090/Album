@@ -1,6 +1,7 @@
-package com.example.owner.album;
+package com.example.owner.album.Main;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,8 +15,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -23,11 +27,13 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.album.Exif.Exif;
 import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.Insert.Classification_Info_Eng_Insert;
 import com.example.owner.album.Insert.Picture_Insert;
+import com.example.owner.album.R;
 import com.example.owner.album.Translate.TranslateEngToJap;
 import com.example.owner.album.model.Picture_Info;
 import com.example.owner.album.query.Album_Query;
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        ;
         setSupportActionBar(toolbar);
 
 
@@ -129,6 +136,7 @@ public class MainActivity extends AppCompatActivity
             startGalleryChooser();
         });
     }
+
 
     public void startGalleryChooser() {
         Intent intent = new Intent();
@@ -311,7 +319,7 @@ public class MainActivity extends AppCompatActivity
 
             protected void onPostExecute(ArrayList<String> result) {
 
-                Classification_Info_Eng_Insert classification_Info_Eng_Insert=new Classification_Info_Eng_Insert();
+                Classification_Info_Eng_Insert classification_Info_Eng_Insert = new Classification_Info_Eng_Insert();
                 classification_Info_Eng_Insert.Insert_Classification_Info(result);
 
                 TranslateEngToJap translate = new TranslateEngToJap(result);

@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Album_Name_Related_Words;
 import com.example.owner.album.model.Picture_Info;
-import com.example.owner.album.model.Tag;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,8 +13,6 @@ import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
