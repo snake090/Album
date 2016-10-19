@@ -72,6 +72,9 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.R.attr.path;
+import static com.example.owner.album.R.id.gridview;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -129,13 +132,18 @@ public class MainActivity extends AppCompatActivity
             startGalleryChooser();
         });
 
-        gridView = (GridView) findViewById(R.id.gridview);
+        gridView = (GridView) findViewById(gridview);
 
 
-        gridView.setNumColumns(3);
+        Picture_Query picture_query = new Picture_Query();
+        ArrayList<String> path = picture_query.Query();
+        if (path.size() != 0) {
+            grid(path);
+        }
 
- //       Picture_Query picture_query = new Picture_Query();
- //       grid(picture_query.Query());
+
+
+
 
     }
 
@@ -154,8 +162,8 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             getExif(data.getData());
             uploadImage(data.getData());
-            Picture_Query picture_query = new Picture_Query();
-            grid(picture_query.Query());
+            //   Picture_Query picture_query = new Picture_Query();
+            //   grid(picture_query.Query());
         }
     }
 
@@ -385,7 +393,9 @@ public class MainActivity extends AppCompatActivity
                 Picture_Query picture_query = new Picture_Query();
                 ArrayList<String> path = picture_query.Query(newText);
                 Log.d("path", "");
-                grid(path);
+                if (path.size() != 0) {
+                    grid(path);
+                }
                 return false;
             }
 
@@ -399,13 +409,16 @@ public class MainActivity extends AppCompatActivity
             File file = new File(filename);
             if (file.exists()) {
                 Bitmap bmp = BitmapFactory.decodeFile(file.getPath());
+
                 lstBitmap.add(bmp);
             }
         }
+
         //アダプター作成
         BitmapAdapter adapter = new BitmapAdapter(getApplicationContext(), lstBitmap);
         //グリッドにアダプタを設定
         gridView.setAdapter(adapter);
+        Log.d("grid","grid");
     }
 
     @Override
