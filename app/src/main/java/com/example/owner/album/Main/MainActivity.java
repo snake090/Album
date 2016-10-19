@@ -101,7 +101,19 @@ public class MainActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-        ;
+        toolbar.inflateMenu(R.menu.search);
+
+        mSearchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
         setSupportActionBar(toolbar);
 
 
