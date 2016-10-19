@@ -3,6 +3,8 @@ package com.example.owner.album.Main;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -24,7 +27,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +50,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
@@ -70,10 +77,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    @BindView(R.id.button_create)
-    Button buttonCreate;
-    @BindView(R.id.button_delete)
-    Button buttonDelete;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.fab)
@@ -88,11 +91,10 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "Main";
     private static final int GALLERY_IMAGE_REQUEST = 1;
-    @BindView(R.id.textView2)
-    TextView textView2;
-    @BindView(R.id.imageView2)
-    ImageView imageView2;
     private ArrayList<String> classification_info_eng = new ArrayList<>();
+
+    private SearchView searchView;
+    private GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,26 +103,14 @@ public class MainActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-        toolbar.inflateMenu(R.menu.search);
-
-        mSearchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-        setSupportActionBar(toolbar);
-
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+
+        setSupportActionBar(toolbar);
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -131,22 +121,22 @@ public class MainActivity extends AppCompatActivity
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
-        buttonCreate.setOnClickListener(v -> {
-            Log.d("AAA", "Created");
-            createBookShelf();
-        });
 
-
-        buttonDelete.setOnClickListener(v -> {
-            Log.d("AAA", "Deleted");
-            deleteBookShelf();
-        });
 
         Realm.init(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             startGalleryChooser();
         });
+
+        gridView = (GridView) findViewById(R.id.gridview);
+
+
+        gridView.setNumColumns(3);
+
+ //       Picture_Query picture_query = new Picture_Query();
+ //       grid(picture_query.Query());
+
     }
 
 
@@ -164,6 +154,8 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             getExif(data.getData());
             uploadImage(data.getData());
+            Picture_Query picture_query = new Picture_Query();
+            grid(picture_query.Query());
         }
     }
 
@@ -180,9 +172,6 @@ public class MainActivity extends AppCompatActivity
         File file = new File(filename);
         if (file.exists()) {
 
-            Bitmap imgBitmap = BitmapFactory.decodeFile(file.getPath());
-
-            imageView2.setImageBitmap(imgBitmap);
 
             ExifInterface exifInterface = null;
 
@@ -377,7 +366,46 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        getMenuInflater().inflate(R.menu.search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("text", newText);
+                Picture_Query picture_query = new Picture_Query();
+                ArrayList<String> path = picture_query.Query(newText);
+                Log.d("path", "");
+                grid(path);
+                return false;
+            }
+
+        });
         return true;
+    }
+
+    public void grid(ArrayList<String> path) {
+        ArrayList<Bitmap> lstBitmap = new ArrayList<Bitmap>();
+        for (String filename : path) {
+            File file = new File(filename);
+            if (file.exists()) {
+                Bitmap bmp = BitmapFactory.decodeFile(file.getPath());
+                lstBitmap.add(bmp);
+            }
+        }
+        //アダプター作成
+        BitmapAdapter adapter = new BitmapAdapter(getApplicationContext(), lstBitmap);
+        //グリッドにアダプタを設定
+        gridView.setAdapter(adapter);
     }
 
     @Override
@@ -388,8 +416,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_delete) {
+            deleteBookShelf();
         }
 
         return super.onOptionsItemSelected(item);
@@ -418,26 +446,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    private void createBookShelf() {
-
-        Picture_Insert insert1 = new Picture_Insert();
-        //    insert1.Insert_DB();
-
-        Album_Insert insert = new Album_Insert();
-        insert.Insert_DB();
-        Picture_Query query = new Picture_Query();
-        RealmResults<Picture_Info> results = query.Query();
-
-        Album_Query query1 = new Album_Query();
-        ArrayList<String> path = query1.Path_Query(2);
-        Log.d("for", path.get(1));
-        // textView2.setText(results.get(0).getPath());
-
-
-        //       textView2.setText(results1.get(0).getPath());
     }
 
     private void deleteBookShelf() {

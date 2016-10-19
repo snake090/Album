@@ -2,6 +2,8 @@ package com.example.owner.album.query;
 
 import com.example.owner.album.model.Picture_Info;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -11,16 +13,33 @@ import io.realm.RealmResults;
 
 public class Picture_Query {
 
-    public RealmResults<Picture_Info> Query(){
+    public ArrayList<String> Query(String name){
 
         Realm r = Realm.getDefaultInstance();
 
-        RealmResults<Picture_Info>results=r.where(Picture_Info.class).equalTo("tags.classification_info_japs.name","panda")
+        RealmResults<Picture_Info>results=r.where(Picture_Info.class).beginsWith("classification_info_japs.name",name)
                                                                         .or()
-                                                                        .equalTo("tags.classification_info_engs.name","panda").findAll();
+                                                                        .beginsWith("classification_info_engs.name",name).findAll();
+        ArrayList<String>path=new ArrayList<>();
+        for(Picture_Info pictureInfo:results){
+            path.add(pictureInfo.getPath());
+        }
         r.close();
-        return results;
+        return path;
     }
+    public ArrayList<String> Query(){
+
+        Realm r = Realm.getDefaultInstance();
+
+        RealmResults<Picture_Info>results=r.where(Picture_Info.class).findAll();
+        ArrayList<String>path=new ArrayList<>();
+        for(Picture_Info pictureInfo:results){
+            path.add(pictureInfo.getPath());
+        }
+        r.close();
+        return path;
+    }
+
     public RealmResults<Picture_Info> Id_Query(){
         Realm r = Realm.getDefaultInstance();
         RealmResults<Picture_Info>results=r.where(Picture_Info.class).findAll();
