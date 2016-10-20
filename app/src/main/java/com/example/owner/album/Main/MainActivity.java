@@ -137,12 +137,8 @@ public class MainActivity extends AppCompatActivity
 
         Picture_Query picture_query = new Picture_Query();
         ArrayList<String> path = picture_query.Query();
-        if (path.size() != 0) {
-            grid(path);
-        }
 
-
-
+        grid(path);
 
 
     }
@@ -418,7 +414,7 @@ public class MainActivity extends AppCompatActivity
         BitmapAdapter adapter = new BitmapAdapter(getApplicationContext(), lstBitmap);
         //グリッドにアダプタを設定
         gridView.setAdapter(adapter);
-        Log.d("grid","grid");
+        Log.d("grid", "grid");
     }
 
     @Override
