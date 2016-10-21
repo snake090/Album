@@ -16,25 +16,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
-　　<ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="100dp"
+        <GridView
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="100dp"
+            android:minHeight="0dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="8dp"
+            android:horizontalSpacing="8dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"/>
 
-        android:minHeight="0dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="8dp"
-        android:horizontalSpacing="8dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"/>
-
-    </ScrollView>
     </LinearLayout>
 
 </RelativeLayout>

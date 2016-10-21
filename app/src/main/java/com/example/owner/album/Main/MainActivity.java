@@ -2,6 +2,7 @@ package com.example.owner.album.Main;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -400,20 +401,40 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void grid(ArrayList<String> path) {
-        ArrayList<Bitmap> lstBitmap = new ArrayList<Bitmap>();
+        ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+/*
         for (String filename : path) {
             File file = new File(filename);
             if (file.exists()) {
                 Bitmap bmp = BitmapFactory.decodeFile(file.getPath());
 
-                lstBitmap.add(bmp);
+                bitmaps.add(bmp);
             }
         }
+        */
+
+
+        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI; //SDカード
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        ContentResolver cr = getContentResolver();
+       // ArrayList<Bitmap> lstBitmap = new ArrayList<Bitmap>();
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++){
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
+            Bitmap bmp = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            bitmaps.add(bmp);
+            cursor.moveToNext();
+        }
+
+        GalleryAdapter galleryAdapter = new GalleryAdapter(this);
+        galleryAdapter.addImageBitmaps(bitmaps);
+        galleryAdapter.setProgressBarStyle(GalleryAdapter.PROGRESS_STYLE_MEDIUM);
+        gridView.setAdapter(galleryAdapter);
 
         //アダプター作成
-        BitmapAdapter adapter = new BitmapAdapter(getApplicationContext(), lstBitmap);
+    //    BitmapAdapter adapter = new BitmapAdapter(getApplicationContext(), lstBitmap);
         //グリッドにアダプタを設定
-        gridView.setAdapter(adapter);
+     //   gridView.setAdapter(adapter);
         Log.d("grid", "grid");
     }
 
