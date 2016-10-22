@@ -2,6 +2,7 @@ package com.example.owner.album.ImageShow;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +10,9 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,7 +56,10 @@ public class FullscreenActivity extends Activity {
     private MyApplication application;
     private ArrayList<String> bitmaps;
     private int position;
-
+    float lastTouchX = 0;
+   // float lastTouchY = 0;
+    float currentX = 0;
+    //float currentY = 0;
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -118,6 +124,8 @@ public class FullscreenActivity extends Activity {
         position = application.getPosition();
         Image_show();
 
+        View view = findViewById(R.id.imageView2);
+        view.setOnTouchListener(new FlickTouchListener());
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -128,11 +136,64 @@ public class FullscreenActivity extends Activity {
             }
         });
 
+
+
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
+    private class FlickTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN://画面に触れたら
+                    lastTouchX = event.getX();
+
+                   // lastTouchY = event.getY();
+                    break;
+
+                case MotionEvent.ACTION_UP://画面を離したら
+                    currentX = event.getX();
+                   // currentY = event.getY();
+                    /*
+                    AlertDialog.Builder alertDlgBld = new AlertDialog.Builder(FullscreenActivity.this);
+                    alertDlgBld.setMessage("(" + lastTouchX +")から(" + currentX +  ")へフリックした");
+
+                    alertDlgBld.setPositiveButton(
+                            "",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    alertDlgBld.show();
+                    */
+                    float distance=Math.abs(currentX-lastTouchX);
+
+                    //右
+                    if((distance>0)&&(distance>100)){
+                        if(position+1<=bitmaps.size()){
+                            position++;
+                            Image_show();
+                        }
+
+                    //左
+                    }else if((distance<0)&&(distance)>100){
+                        if(position-1>=0){
+                            position--;
+                            Image_show();
+                        }
+
+                }
+                    break;
+            }
+            return true;
+        }
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -203,7 +264,6 @@ public class FullscreenActivity extends Activity {
     }
 
     private void Image_show(){
-        position = application.getPosition();
         ImageUtils imageUtils=new ImageUtils();
         Orientation orientation=new Orientation();
         Bitmap bitmap=BitmapFactory.decodeFile(bitmaps.get(position));
