@@ -43,7 +43,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
     private ArrayList<Integer> resourceIds;
     private ArrayList<Bitmap> bitmaps;
     private int progressBarStyle = 2;
-    private ArrayList<Pair<Integer, Integer>> imageValues = new ArrayList<Pair<Integer,Integer>>();
+    private ArrayList<Pair<Integer, Integer>> imageValues = new ArrayList<Pair<Integer, Integer>>();
 
     public GalleryAdapter(Context context) {
         super(context, 0);
@@ -54,7 +54,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
     public void addImageResourceIds(ArrayList<Integer> resourceIds) {
 
-        for(int i = 0 ; i < resourceIds.size() ; i++) {
+        for (int i = 0; i < resourceIds.size(); i++) {
 
             addImageResourceId(resourceIds.get(i));
 
@@ -64,7 +64,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
     public void addImageBitmaps(ArrayList<Bitmap> bitmaps) {
 
-        for(int i = 0 ; i < bitmaps.size() ; i++) {
+        for (int i = 0; i < bitmaps.size(); i++) {
 
             addImageBitmap(bitmaps.get(i));
 
@@ -109,28 +109,28 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
         int imageValueType, imageValueIndex;
         int addIndex = -1;
 
-        for(int i = 0; i < imageValues.size(); i++) {
+        for (int i = 0; i < imageValues.size(); i++) {
 
             imageValue = imageValues.get(i);
             imageValueType = imageValue.first;
             imageValueIndex = imageValue.second;
 
-            if(imageType == imageValueType && i >= index) {
+            if (imageType == imageValueType && i >= index) {
 
-                if(firstImageValueFlag) {
+                if (firstImageValueFlag) {
 
                     addIndex = imageValueIndex;
                     firstImageValueFlag = false;
 
                 }
 
-                imageValues.set(i, new Pair<Integer, Integer>(imageValueType, (imageValueIndex+1)));
+                imageValues.set(i, new Pair<Integer, Integer>(imageValueType, (imageValueIndex + 1)));
 
             }
 
         }
 
-        if(addIndex == -1) {
+        if (addIndex == -1) {
 
             return defaultIndex;
 
@@ -154,13 +154,20 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
     }
 
+    public Bitmap getBitmap(int index) {
+        Pair<Integer, Integer> imageValue = imageValues.get(index);
+        int imageIndex = imageValue.second;
+        Bitmap bmp = bitmaps.get(imageIndex);
+        return bmp;
+    }
+
     public void remove(int index) {
 
         Pair<Integer, Integer> imageValue = imageValues.get(index);
         int imageType = imageValue.first;
         int imageIndex = imageValue.second;
 
-        switch(imageType) {
+        switch (imageType) {
             case IMAGE_TYPE_RESOURCE_ID:
                 resourceIds.remove(imageIndex);
                 break;
@@ -171,13 +178,13 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
         imageValues.remove(index);
 
-        for(int i = index; i < imageValues.size(); i++) {
+        for (int i = index; i < imageValues.size(); i++) {
 
             imageValue = imageValues.get(i);
 
-            if(imageType == imageValue.first) {
+            if (imageType == imageValue.first) {
 
-                imageValues.set(i, new Pair<Integer, Integer>(imageValue.first, (imageValue.second-1)));
+                imageValues.set(i, new Pair<Integer, Integer>(imageValue.first, (imageValue.second - 1)));
 
             }
 
@@ -189,7 +196,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
         bitmaps = new ArrayList<Bitmap>();
         resourceIds = new ArrayList<Integer>();
-        imageValues = new ArrayList<Pair<Integer,Integer>>();
+        imageValues = new ArrayList<Pair<Integer, Integer>>();
 
     }
 
@@ -205,7 +212,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
         RelativeLayout relativeLayout = new RelativeLayout(context);
         ProgressBar progressBar = null;
 
-        if(progressBarStyle != -1) {
+        if (progressBarStyle != -1) {
 
             progressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleSmall);
             relativeLayout.addView(progressBar, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -217,7 +224,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
         int imageType = imageValue.first;
         int imageIndex = imageValue.second;
 
-        if(imageType == IMAGE_TYPE_BITMAP) {
+        if (imageType == IMAGE_TYPE_BITMAP) {
 
             squareImageView.setImageBitmap(bitmaps.get(imageIndex));
 
@@ -262,18 +269,19 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
         protected void onDraw(Canvas canvas) {
 
             int canvasLength = canvas.getWidth();
-            BitmapDrawable bitamBitmapDrawable = (BitmapDrawable)getDrawable();
+            BitmapDrawable bitamBitmapDrawable = (BitmapDrawable) getDrawable();
 
-            if(bitamBitmapDrawable == null) {
+            if (bitamBitmapDrawable == null) {
 
                 GridItemTask task = new GridItemTask(this, context.getResources(), canvasLength);
 
                 try {
                     task.execute(resourceId);
-                } catch(RejectedExecutionException e){
-                    try{
+                } catch (RejectedExecutionException e) {
+                    try {
                         task.execute(resourceId);
-                    } catch(Exception exception){}
+                    } catch (Exception exception) {
+                    }
                 }
 
                 return;
@@ -286,15 +294,15 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
             Bitmap bitmap = bitamBitmapDrawable.getBitmap();
 
-            if(bitmap == null) return;
+            if (bitmap == null) return;
 
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();
             int rectStartX, rectStartY, rectEndX, rectEndY;
 
-            if(bitmapWidth == bitmapHeight) {
+            if (bitmapWidth == bitmapHeight) {
 
-                if(bitmapWidth != canvasLength) {
+                if (bitmapWidth != canvasLength) {
 
                     bitmap = Bitmap.createScaledBitmap(bitmap, canvasLength, canvasLength, false);
 
@@ -307,20 +315,20 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
 
                 float ratio;
 
-                if(bitmapWidth > bitmapHeight) {
+                if (bitmapWidth > bitmapHeight) {
 
-                    ratio = (float)bitmapHeight / (float)bitmapWidth;
-                    bitmap = Bitmap.createScaledBitmap(bitmap, canvasLength, (int) Math.ceil(ratio*canvasLength), false);
+                    ratio = (float) bitmapHeight / (float) bitmapWidth;
+                    bitmap = Bitmap.createScaledBitmap(bitmap, canvasLength, (int) Math.ceil(ratio * canvasLength), false);
                     rectStartX = 0;
-                    rectStartY = (int) ((float)canvasLength / 2F - (float)bitmap.getHeight() / 2F);
+                    rectStartY = (int) ((float) canvasLength / 2F - (float) bitmap.getHeight() / 2F);
                     rectEndX = canvasLength;
                     rectEndY = rectStartY + bitmap.getHeight();
 
                 } else {
 
-                    ratio = (float)bitmapWidth / (float)bitmapHeight;
-                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Math.ceil(ratio*canvasLength), canvasLength, false);
-                    rectStartX = rectStartY = (int) ((float)canvasLength / 2F - (float)bitmap.getWidth() / 2F);
+                    ratio = (float) bitmapWidth / (float) bitmapHeight;
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Math.ceil(ratio * canvasLength), canvasLength, false);
+                    rectStartX = rectStartY = (int) ((float) canvasLength / 2F - (float) bitmap.getWidth() / 2F);
                     rectStartY = 0;
                     rectEndX = rectStartX + bitmap.getWidth();
                     rectEndY = canvasLength;
@@ -352,7 +360,7 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
 
-            if(squareImageView.progressBar != null) {
+            if (squareImageView.progressBar != null) {
 
                 squareImageView.progressBar.setVisibility(View.GONE);
 
@@ -375,15 +383,15 @@ public class GalleryAdapter extends ArrayAdapter<Bitmap> {
             int bitmapHeight = options.outHeight;
             int inSampleSize = 1;
 
-            if(bitmapWidth > canvasLength || bitmapHeight > canvasLength) {
+            if (bitmapWidth > canvasLength || bitmapHeight > canvasLength) {
 
-                if(bitmapWidth > bitmapHeight) {
+                if (bitmapWidth > bitmapHeight) {
 
-                    inSampleSize = (int) Math.floor((float)bitmapWidth / (float)canvasLength);
+                    inSampleSize = (int) Math.floor((float) bitmapWidth / (float) canvasLength);
 
                 } else {
 
-                    inSampleSize = (int) Math.floor((float)bitmapHeight / (float)canvasLength);
+                    inSampleSize = (int) Math.floor((float) bitmapHeight / (float) canvasLength);
 
                 }
 

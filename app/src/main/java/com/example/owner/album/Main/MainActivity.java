@@ -1,11 +1,8 @@
 package com.example.owner.album.Main;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,10 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.WindowCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -31,20 +25,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.album.Exif.Exif;
-import com.example.owner.album.Insert.Album_Insert;
+import com.example.owner.album.ImageShow.FullscreenActivity;
+import com.example.owner.album.ImageShow.MyApplication;
 import com.example.owner.album.Insert.Classification_Info_Eng_Insert;
 import com.example.owner.album.Insert.Picture_Insert;
 import com.example.owner.album.R;
 import com.example.owner.album.Translate.TranslateEngToJap;
-import com.example.owner.album.model.Picture_Info;
-import com.example.owner.album.query.Album_Query;
 import com.example.owner.album.query.Picture_Query;
 import com.facebook.stetho.Stetho;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -52,7 +42,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
@@ -65,6 +54,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +62,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-import static android.R.attr.path;
 import static com.example.owner.album.R.id.gridview;
 
 
@@ -100,7 +88,10 @@ public class MainActivity extends AppCompatActivity
 
     private SearchView searchView;
     private GridView gridView;
-
+    private GalleryAdapter galleryAdapter ;
+    private ArrayList<Bitmap> bitmaps;
+    private MyApplication app;
+    private ArrayList<String> bitmap_path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,12 +126,33 @@ public class MainActivity extends AppCompatActivity
         });
 
         gridView = (GridView) findViewById(gridview);
-
-
+        galleryAdapter=new GalleryAdapter(this);
+        app = (MyApplication)this.getApplication();
         Picture_Query picture_query = new Picture_Query();
         ArrayList<String> path = picture_query.Query();
-
         grid(path);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               // galleryAdapter.remove(position);
+             //   Bitmap bitmap=galleryAdapter.getBitmap(position);
+
+                Intent intent;
+
+                intent = new Intent(MainActivity.this,FullscreenActivity.class);
+               // intent.setClassName("Main.MainActivity","Image_Show.FullscreenActivity");
+
+              //  intent.putExtra("bitmap",bitmaps);
+                app.setBitmaps(bitmap_path);
+                app.setPosition(position);
+
+                startActivity(intent);
+
+
+            }
+        });
+
+
 
 
     }
@@ -402,7 +414,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void grid(ArrayList<String> path) {
-        ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+        bitmaps = new ArrayList<>();
+        bitmap_path=new ArrayList<>();
 
         ExifInterface exifInterface=null;
         Orientation orientation_class=new Orientation();
@@ -432,23 +445,11 @@ public class MainActivity extends AppCompatActivity
                     bitmaps.add(bmp);
                     cursor.moveToNext();
                 }
+                bitmap_path.add(file.getPath());
+
             }
         }
-/*
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI; //SDカード
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        ContentResolver cr = getContentResolver();
-       // ArrayList<Bitmap> lstBitmap = new ArrayList<Bitmap>();
-        cursor.moveToFirst();
-        for (int i = 0; i < cursor.getCount(); i++){
-            long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
-            Bitmap bmp = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-            bitmaps.add(bmp);
-            cursor.moveToNext();
-        }
-        */
 
-        GalleryAdapter galleryAdapter = new GalleryAdapter(this);
         galleryAdapter.addImageBitmaps(bitmaps);
         galleryAdapter.setProgressBarStyle(GalleryAdapter.PROGRESS_STYLE_MEDIUM);
         gridView.setAdapter(galleryAdapter);
