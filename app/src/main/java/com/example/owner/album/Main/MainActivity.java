@@ -18,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.WindowCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         ButterKnife.bind(this);
 
 
@@ -115,7 +117,6 @@ public class MainActivity extends AppCompatActivity
 
 
         setSupportActionBar(toolbar);
-
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -206,11 +207,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-    private static String basename(String path) {
-        File file = new File(path);
-        return file.getName();
-    }
 
     public void uploadImage(Uri uri) {
         if (uri != null) {
@@ -330,6 +326,11 @@ public class MainActivity extends AppCompatActivity
 
                 TranslateEngToJap translate = new TranslateEngToJap(result);
                 translate.execute();
+
+                Picture_Query picture_query = new Picture_Query();
+                ArrayList<String> path = picture_query.Query();
+
+                grid(path);
             }
         }.execute();
     }
@@ -402,18 +403,38 @@ public class MainActivity extends AppCompatActivity
 
     public void grid(ArrayList<String> path) {
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-/*
+
+        ExifInterface exifInterface=null;
+        Orientation orientation_class=new Orientation();
         for (String filename : path) {
             File file = new File(filename);
             if (file.exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(file.getPath());
-
-                bitmaps.add(bmp);
+                try {
+                    exifInterface = new ExifInterface(filename);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                int orientation = exifInterface.getAttributeInt(
+                        ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+                Cursor cursor = getContentResolver().query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        null,
+                        MediaStore.Images.ImageColumns.DATA + " = ?",
+                        new String[]{filename},
+                        null);
+                ContentResolver cr = getContentResolver();
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++){
+                    long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
+                    Bitmap bmp = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+                    bmp=orientation_class.orientation(bmp,orientation);
+                    bitmaps.add(bmp);
+                    cursor.moveToNext();
+                }
             }
         }
-        */
-
-
+/*
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI; //SDカード
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         ContentResolver cr = getContentResolver();
@@ -425,16 +446,13 @@ public class MainActivity extends AppCompatActivity
             bitmaps.add(bmp);
             cursor.moveToNext();
         }
+        */
 
         GalleryAdapter galleryAdapter = new GalleryAdapter(this);
         galleryAdapter.addImageBitmaps(bitmaps);
         galleryAdapter.setProgressBarStyle(GalleryAdapter.PROGRESS_STYLE_MEDIUM);
         gridView.setAdapter(galleryAdapter);
 
-        //アダプター作成
-    //    BitmapAdapter adapter = new BitmapAdapter(getApplicationContext(), lstBitmap);
-        //グリッドにアダプタを設定
-     //   gridView.setAdapter(adapter);
         Log.d("grid", "grid");
     }
 
