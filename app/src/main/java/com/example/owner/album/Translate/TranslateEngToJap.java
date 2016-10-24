@@ -43,6 +43,5 @@ public class TranslateEngToJap extends AsyncTask<Void, Void, ArrayList<String>> 
         Classification_Info_Jap_Insert classification_info_jap_insert=new Classification_Info_Jap_Insert();
         classification_info_jap_insert.Insert_Classification_Info(result);
 
-
     }
 }

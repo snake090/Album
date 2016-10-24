@@ -17,9 +17,15 @@ public class Picture_Query {
 
         Realm r = Realm.getDefaultInstance();
 
-        RealmResults<Picture_Info>results=r.where(Picture_Info.class).beginsWith("classification_info_japs.name",name)
+        RealmResults<Picture_Info>results=r.where(Picture_Info.class).contains("classification_info_japs.name",name)
                                                                         .or()
-                                                                        .beginsWith("classification_info_engs.name",name).findAll();
+                                                                        .contains("classification_info_engs.name",name)
+                                                                        .or()
+                                                                        .contains("landmark_eng",name)
+                                                                        .or()
+                                                                        .contains("landmark_jap",name).findAll();
+
+
         ArrayList<String>path=new ArrayList<>();
         for(Picture_Info pictureInfo:results){
             path.add(pictureInfo.getPath());
@@ -43,9 +49,9 @@ public class Picture_Query {
     public RealmResults<Picture_Info> Id_Query(){
         Realm r = Realm.getDefaultInstance();
         RealmResults<Picture_Info>results=r.where(Picture_Info.class).findAll();
-
         r.close();
         return results;
     }
+
 
 }

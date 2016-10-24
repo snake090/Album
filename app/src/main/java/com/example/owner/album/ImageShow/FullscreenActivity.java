@@ -171,19 +171,18 @@ public class FullscreenActivity extends Activity {
 
                     alertDlgBld.show();
                     */
-                    float distance=Math.abs(currentX-lastTouchX);
+                    float distance=currentX-lastTouchX;
 
                     //右
-                    if((distance>0)&&(distance>100)){
-                        if(position+1<=bitmaps.size()){
-                            position++;
-                            Image_show();
-                        }
-
-                    //左
-                    }else if((distance<0)&&(distance)>100){
+                    if((distance>0)&&(Math.abs(distance)>100)){
                         if(position-1>=0){
                             position--;
+                            Image_show();
+                        }
+                    //左
+                    }else if((distance<0)&&(Math.abs(distance))>100){
+                        if(position+1<bitmaps.size()){
+                            position++;
                             Image_show();
                         }
 

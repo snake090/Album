@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.owner.album.CloudVision.CloudVision_Landmark;
 import com.example.owner.album.Exif.Exif;
 import com.example.owner.album.ImageShow.FullscreenActivity;
 import com.example.owner.album.ImageShow.MyApplication;
@@ -88,10 +89,11 @@ public class MainActivity extends AppCompatActivity
 
     private SearchView searchView;
     private GridView gridView;
-    private GalleryAdapter galleryAdapter ;
+    private GalleryAdapter galleryAdapter;
     private ArrayList<Bitmap> bitmaps;
     private MyApplication app;
     private ArrayList<String> bitmap_path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,23 +128,23 @@ public class MainActivity extends AppCompatActivity
         });
 
         gridView = (GridView) findViewById(gridview);
-        galleryAdapter=new GalleryAdapter(this);
-        app = (MyApplication)this.getApplication();
+        galleryAdapter = new GalleryAdapter(this);
+        app = (MyApplication) this.getApplication();
         Picture_Query picture_query = new Picture_Query();
         ArrayList<String> path = picture_query.Query();
         grid(path);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               // galleryAdapter.remove(position);
-             //   Bitmap bitmap=galleryAdapter.getBitmap(position);
+                // galleryAdapter.remove(position);
+                //   Bitmap bitmap=galleryAdapter.getBitmap(position);
 
                 Intent intent;
 
-                intent = new Intent(MainActivity.this,FullscreenActivity.class);
-               // intent.setClassName("Main.MainActivity","Image_Show.FullscreenActivity");
+                intent = new Intent(MainActivity.this, FullscreenActivity.class);
+                // intent.setClassName("Main.MainActivity","Image_Show.FullscreenActivity");
 
-              //  intent.putExtra("bitmap",bitmaps);
+                //  intent.putExtra("bitmap",bitmaps);
                 app.setBitmaps(bitmap_path);
                 app.setPosition(position);
 
@@ -151,8 +153,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-
 
 
     }
@@ -172,8 +172,7 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             getExif(data.getData());
             uploadImage(data.getData());
-            //   Picture_Query picture_query = new Picture_Query();
-            //   grid(picture_query.Query());
+
         }
     }
 
@@ -220,6 +219,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
+    //cloudvision
     public void uploadImage(Uri uri) {
         if (uri != null) {
             try {
@@ -229,6 +230,8 @@ public class MainActivity extends AppCompatActivity
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
                                 1200);
 
+                CloudVision_Landmark cloudVision_landmark=new CloudVision_Landmark();
+                cloudVision_landmark.callCloudVision(bitmap);
                 callCloudVision(bitmap);
 
             } catch (IOException e) {
@@ -330,7 +333,6 @@ public class MainActivity extends AppCompatActivity
                 return message;
             }
 
-
             protected void onPostExecute(ArrayList<String> result) {
 
                 Classification_Info_Eng_Insert classification_Info_Eng_Insert = new Classification_Info_Eng_Insert();
@@ -351,18 +353,10 @@ public class MainActivity extends AppCompatActivity
 
         ArrayList<String> message = new ArrayList<>();
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        List<EntityAnnotation> landmarks = response.getResponses().get(0).getLandmarkAnnotations();
         if (labels != null) {
             for (EntityAnnotation label : labels) {
                 message.add(label.getDescription());
-                classification_info_eng.add(label.getDescription());
 
-            }
-        }
-        if (landmarks != null) {
-            for (EntityAnnotation landmark : landmarks) {
-                message.add(landmark.getDescription());
-                classification_info_eng.add(landmark.getDescription());
             }
         }
 
@@ -405,6 +399,12 @@ public class MainActivity extends AppCompatActivity
                 Log.d("path", "");
                 if (path.size() != 0) {
                     grid(path);
+                } else {
+                    galleryAdapter.removeAll();
+                }
+                if (newText.equals("")) {
+                    path = picture_query.Query();
+                    grid(path);
                 }
                 return false;
             }
@@ -415,16 +415,17 @@ public class MainActivity extends AppCompatActivity
 
     public void grid(ArrayList<String> path) {
         bitmaps = new ArrayList<>();
-        bitmap_path=new ArrayList<>();
+        bitmap_path = new ArrayList<>();
+        galleryAdapter.removeAll();
 
-        ExifInterface exifInterface=null;
-        Orientation orientation_class=new Orientation();
+        ExifInterface exifInterface = null;
+        Orientation orientation_class = new Orientation();
         for (String filename : path) {
             File file = new File(filename);
             if (file.exists()) {
                 try {
                     exifInterface = new ExifInterface(filename);
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 int orientation = exifInterface.getAttributeInt(
@@ -438,10 +439,10 @@ public class MainActivity extends AppCompatActivity
                         null);
                 ContentResolver cr = getContentResolver();
                 cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++){
+                for (int i = 0; i < cursor.getCount(); i++) {
                     long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
                     Bitmap bmp = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-                    bmp=orientation_class.orientation(bmp,orientation);
+                    bmp = orientation_class.orientation(bmp, orientation);
                     bitmaps.add(bmp);
                     cursor.moveToNext();
                 }

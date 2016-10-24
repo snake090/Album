@@ -16,4 +16,5 @@ public class Exif {
         double degrees = dhour + dmin / 60.0 + dsec / 3600.0;
         return String.valueOf(degrees);
     }
+
 }
