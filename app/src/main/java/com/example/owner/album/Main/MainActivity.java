@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.owner.album.Album.Album_Create_Activity;
 import com.example.owner.album.CloudVision.CloudVision_Landmark;
 import com.example.owner.album.Exif.Exif;
 import com.example.owner.album.ImageShow.FullscreenActivity;
@@ -468,6 +469,14 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
             deleteBookShelf();
+        }else if(id==R.id.action_create_album) {
+
+            Intent intent;
+
+            intent = new Intent(MainActivity.this, Album_Create_Activity.class);
+
+
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

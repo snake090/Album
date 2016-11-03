@@ -31,8 +31,11 @@
             android:name=".ImageShow.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme"
-            ></activity>
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".Album.Album_Create_Activity"
+            android:label="@string/title_activity_album__create_"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

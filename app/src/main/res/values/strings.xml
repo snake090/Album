@@ -5,9 +5,26 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search_hint">Picture Search</string>
     <string name="delete">Delete</string>
+    <string name="album_create">Album_create</string>
     <string name="title_activity_search_result">SearchResultActivity</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_album__create_">Album_Create_Activity</string>
+
+    <string name="action_settings">Settings</string>
+    
+    <string-array name="list">
+        <item>Before</item>
+        <item>That Day</item>
+        <item>After</item>
+    </string-array>
+
+    <string-array name="list1">
+        <item>AND Search</item>
+        <item>OR Search</item>
+
+    </string-array>
+
 </resources>
