@@ -34,8 +34,8 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
     String accessToken = "QAlwM65b7AmshghYIFdHFYTNqAUcp1NBW6ijsnFxFXOcapvApV";
     String word = "lovely";
     String detail = "definitions";
-    final StringBuilder result = new StringBuilder();
-
+    byte bodyByte[] = new byte[1024];
+    StringBuilder sb = new StringBuilder();
     public WordsAPI(String word) {
         super();
         words = word;
@@ -55,41 +55,29 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
             con.setRequestProperty("X-Mashape-Key", "QAlwM65b7AmshghYIFdHFYTNqAUcp1NBW6ijsnFxFXOcapvApV");
             con.setRequestProperty("Accept", "application/json");
             con.connect();
-// HTTPレスポンスコード
+            /*
+            InputStream in = con.getInputStream();
+            in.read(bodyByte);
+            in.close();
+            */
+
+            // HTTPレスポンスコード
             final int status = con.getResponseCode();
             if (status == HttpURLConnection.HTTP_OK) {
-                final InputStream in = con.getInputStream();
-                final String encoding = con.getContentEncoding();
-                final InputStreamReader inReader = new InputStreamReader(in, encoding);
-                final BufferedReader bufReader = new BufferedReader(inReader);
-                String line = null;
-                // 1行ずつテキストを読み込む
-                while((line = bufReader.readLine()) != null) {
-                    result.append(line);
-                }
-                bufReader.close();
-                inReader.close();
-                in.close();
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 
-                BufferedInputStream inputStream = new BufferedInputStream(con.getInputStream());
-                ByteArrayOutputStream responseArray = new ByteArrayOutputStream();
-                byte[] buff = new byte[1024];
 
-                int length;
-                while((length = inputStream.read(buff)) != -1) {
-                    if(length > 0) {
-                        responseArray.write(buff, 0, length);
-                    }
+                StringBuilder result = new StringBuilder();
+
+                String line;
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
                 }
-                StringBuilder viewStrBuilder = new StringBuilder();
-                JSONObject jsonObj = new JSONObject(new String(responseArray.toByteArray()));
-                JSONArray result = jsonObj.getJSONArray("results");
-                for(int i = 0; i < result.length(); i++) {
-                    JSONObject word = result.getJSONObject(i);
-                    message.add(word.getString("also"));
-                }
-                System.out.print("");
+                // 取得した文字列からjsonobjectを作成
+                JSONObject jsonObject = new JSONObject(sb.toString());
             }
+
             System.out.print("");
         }catch (Exception e){
             e.getStackTrace();
