@@ -2,9 +2,6 @@ package com.example.owner.album.Album;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,19 +10,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.example.owner.album.R;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.Calendar;
-
-import butterknife.ButterKnife;
 
 public class Album_Create_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    EditText editText5;
+    EditText date;
+    EditText keyword1;
+    Button create_album;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +45,9 @@ public class Album_Create_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        editText5=(EditText)findViewById(R.id.editText5);
-        editText5.setOnClickListener(v->{
+        keyword1=(EditText)findViewById(R.id.KeyWord1);
+        date=(EditText)findViewById(R.id.Date);
+        date.setOnClickListener(v->{
 
 
             // 現在の日付を取得
@@ -60,13 +63,22 @@ public class Album_Create_Activity extends AppCompatActivity
 
                         public void onDateSet(DatePicker view,
                                               int year, int monthOfYear, int dayOfMonth) {
-                            editText5.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear)+"/"+String.valueOf(dayOfMonth));
+                            date.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear)+"/"+String.valueOf(dayOfMonth));
                         }
                     },
                     year, month, day);
 
             // 表示
             datePicker.show();
+
+        });
+        create_album =(Button)findViewById(R.id.Create);
+        create_album.setOnClickListener(v->{
+            String keyword=keyword1.getText().toString();
+
+
+            WordsAPI wordsapi=new WordsAPI("");
+            wordsapi.execute();
 
         });
     }
@@ -127,4 +139,5 @@ public class Album_Create_Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
