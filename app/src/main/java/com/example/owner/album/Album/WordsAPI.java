@@ -32,10 +32,10 @@ import java.util.ArrayList;
 public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
     private String words;
     String accessToken = "QAlwM65b7AmshghYIFdHFYTNqAUcp1NBW6ijsnFxFXOcapvApV";
-    String word = "lovely";
     String detail = "definitions";
-    byte bodyByte[] = new byte[1024];
     StringBuilder sb = new StringBuilder();
+    JSONArray jsonArray;
+    ArrayList<String> message;
     public WordsAPI(String word) {
         super();
         words = word;
@@ -44,7 +44,7 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
 
     @Override
     protected ArrayList<String> doInBackground(Void... value) {
-        ArrayList<String> message = new ArrayList<String>();
+        message = new ArrayList<String>();
 
         try {
             HttpURLConnection con = null;
@@ -76,6 +76,10 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
                 }
                 // 取得した文字列からjsonobjectを作成
                 JSONObject jsonObject = new JSONObject(sb.toString());
+                jsonArray = jsonObject.getJSONArray("also");
+                for(int i=0;i<jsonArray.length();i++){
+                    message.add(jsonArray.get(i).toString());
+                }
             }
 
             System.out.print("");
