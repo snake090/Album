@@ -75,10 +75,13 @@ public class Album_Create_Activity extends AppCompatActivity
         create_album =(Button)findViewById(R.id.Create);
         create_album.setOnClickListener(v->{
             String keyword=keyword1.getText().toString();
+            Word_association word=new Word_association();
+            word.execute();
 
 
             WordsAPI wordsapi=new WordsAPI("");
             wordsapi.execute();
+
 
         });
     }
