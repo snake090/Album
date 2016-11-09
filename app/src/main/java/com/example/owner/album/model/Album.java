@@ -11,8 +11,8 @@ import io.realm.annotations.Required;
 
 public class Album extends RealmObject{
 
-    RealmList<Keyword> keywords;
-    RealmList<Picture_Info> picture_infos;
+    private RealmList<Keyword> keywords;
+    private RealmList<Picture_Info> picture_infos;
     @PrimaryKey
     private int album_id;
     @Required

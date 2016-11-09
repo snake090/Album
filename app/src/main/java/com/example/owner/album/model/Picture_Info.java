@@ -13,8 +13,8 @@ import io.realm.annotations.Required;
 
 public class Picture_Info extends RealmObject {
 
-    RealmList<Classification_Info_Eng> classification_info_engs;
-    RealmList<Classification_Info_Jap> classification_info_japs;
+    private RealmList<Classification_Info_Eng> classification_info_engs;
+    private RealmList<Classification_Info_Jap> classification_info_japs;
     @PrimaryKey
     private int id;
     @Required

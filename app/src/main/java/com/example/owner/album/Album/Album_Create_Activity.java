@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.R;
 import com.example.owner.album.model.Album;
+import com.example.owner.album.model.Keyword;
+import com.example.owner.album.model.Related_Words;
+import com.example.owner.album.query.Keyword_Query;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -25,6 +28,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class Album_Create_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,10 +104,26 @@ public class Album_Create_Activity extends AppCompatActivity
             if(keywords.size()!=0&&albumName!=null) {
                 Album_Insert album_insert = new Album_Insert();
                 album_insert.Insert_DB(albumName,keywords);
+                Keyword_Query keyword_query=new Keyword_Query();
+
+                for(String keyword:keywords){
+                   RealmResults<Keyword> realmResults=keyword_query.Double_Check(keyword);
+                    if(realmResults.size()!=0) {
+                        RealmList<Related_Words> realmList = realmResults.get(0).getRelated_wordses();
+                        if (realmList.size() == 0) {
+                            Word_association word_association = new Word_association(keyword);
+                            word_association.execute();
+                        }
+                    }else{
+                        Word_association word_association = new Word_association(keyword);
+                        word_association.execute();
+                    }
+                }
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Please enter album name or keyword",Toast.LENGTH_LONG).show();
             }
+
 
             /*
             Word_association word=new Word_association("世界遺産");

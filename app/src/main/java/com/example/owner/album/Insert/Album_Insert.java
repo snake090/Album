@@ -2,6 +2,7 @@ package com.example.owner.album.Insert;
 
 import android.util.Log;
 
+import com.example.owner.album.Translate.Translate_Keyword_JapToEng;
 import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Album_Name_Related_Words;
 import com.example.owner.album.model.Picture_Info;
@@ -92,8 +93,8 @@ public class Album_Insert {
         }
         r.commitTransaction();
         r.close();
-        Keyword_Insert keyword_insert=new Keyword_Insert();
-        keyword_insert.Insert_Keyword(keyword);
+        Translate_Keyword_JapToEng translate_keyword_japToEng=new Translate_Keyword_JapToEng(keyword);
+        translate_keyword_japToEng.execute();
 
 
     }

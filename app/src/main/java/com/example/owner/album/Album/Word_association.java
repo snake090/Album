@@ -2,8 +2,8 @@ package com.example.owner.album.Album;
 
 import android.os.AsyncTask;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.example.owner.album.Translate.Translate_Words_JapToEng;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
 
     private  String word;
-    private int ID;
     public Word_association(String word) {
         super();
         this.word=word;
@@ -66,6 +65,13 @@ public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
         return message;
     }
     protected void onPostExecute(ArrayList<String>result) {
+
+        ArrayList<String>keyword=new ArrayList<>();
+        for(int i=0;i<10;i++){
+            keyword.add(result.get(i));
+        }
+        Translate_Words_JapToEng translate_words_JapToEng =new Translate_Words_JapToEng(keyword,word);
+        translate_words_JapToEng.execute();
 
 
     }

@@ -17,28 +17,31 @@ import io.realm.Sort;
  */
 
 public class Keyword_Insert {
-    public void Insert_Keyword(ArrayList<String> keyword){
+    public void Insert_Keyword(ArrayList<String> keywordJap,ArrayList<String> keywordEng){
         Realm r = Realm.getDefaultInstance();
         r.beginTransaction();
 
         Keyword_Query keyword_query=new Keyword_Query();
         RealmList<Keyword> keywordRealmList=new RealmList<>();
-        ArrayList<String> name=new ArrayList<>();
+        ArrayList<String> nameJap=new ArrayList<>();
+        ArrayList<String> nameEng=new ArrayList<>();
 
-        for(int i=0;i<keyword.size();i++){
-            RealmResults<Keyword> keywordRealmResults=keyword_query.Double_Check(keyword.get(i));
+        for(int i=0;i<keywordJap.size();i++){
+            RealmResults<Keyword> keywordRealmResults=keyword_query.Double_Check(keywordJap.get(i));
             if(keywordRealmResults.size()==0){
-                name.add(keyword.get(i));
+                nameJap.add(keywordJap.get(i));
+                nameEng.add(keywordEng.get(i));
             }else{
                 keywordRealmList.add(keywordRealmResults.get(0));
             }
         }
         Keyword keyword1[];
-        if(name.size()!=0){
-            keyword1=new Keyword[name.size()];
+        if(nameJap.size()!=0){
+            keyword1=new Keyword[nameJap.size()];
             for(int i=0;i<keyword1.length;i++){
                 keyword1[i]=r.createObject(Keyword.class);
-                keyword1[i].setKeyword(name.get(i));
+                keyword1[i].setKeyword_Jap(nameJap.get(i));
+                keyword1[i].setKeyword_Eng(nameEng.get(i));
             }
             for(Keyword keyword2:keyword1){
                 keywordRealmList.add(keyword2);
@@ -54,10 +57,6 @@ public class Keyword_Insert {
 
         r.commitTransaction();
         r.close();
-
-
-
-
 
     }
 }
