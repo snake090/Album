@@ -10,13 +10,8 @@ import io.realm.annotations.Required;
  */
 
 public class Classification_Info_Eng extends RealmObject {
-    RealmList<Related_Words> related_wordses;
     @Required
     private String name;
-
-    public void setRelated_wordses(RealmList<Related_Words> related_wordses) {
-        this.related_wordses = related_wordses;
-    }
 
     public void setName(String name) {
         this.name = name;

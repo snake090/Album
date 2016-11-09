@@ -15,6 +15,7 @@ import java.util.Set;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 
 /**
@@ -23,6 +24,7 @@ import io.realm.RealmResults;
 
 public class Album_Insert {
     public void Insert_DB() {
+        /*
         Realm r = Realm.getDefaultInstance();
 
         r.beginTransaction();
@@ -68,7 +70,33 @@ public class Album_Insert {
 
 
         r.commitTransaction();
-        r.close();
+        r.close();*/
     }
+
+    public void Insert_DB(String name,ArrayList<String>keyword){
+        Realm r = Realm.getDefaultInstance();
+        r.beginTransaction();
+        Album_Query album_query=new Album_Query();
+        RealmResults<Album> realmResults=album_query.Id_Query();
+
+        if(realmResults.size()==0){
+            Album album=r.createObject(Album.class,1);
+            album.setAlbum_name(name);
+
+        }else{
+            realmResults=realmResults.sort("album_id", Sort.DESCENDING);
+            int id=realmResults.get(0).getAlbum_id();
+            Album album=r.createObject(Album.class,id+1);
+            album.setAlbum_name(name);
+
+        }
+        r.commitTransaction();
+        r.close();
+        Keyword_Insert keyword_insert=new Keyword_Insert();
+        keyword_insert.Insert_Keyword(keyword);
+
+
+    }
+
 
 }

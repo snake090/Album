@@ -15,7 +15,7 @@
 
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -122,7 +122,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="KeyWord"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/Name"
         android:layout_alignParentStart="true" />
 
     <EditText

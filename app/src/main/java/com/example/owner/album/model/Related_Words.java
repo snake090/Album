@@ -16,8 +16,6 @@ public class Related_Words extends RealmObject {
     @Index
     private String related_words;
 
-
-
     public void setRelated_words(String related_words) {
         this.related_words = related_words;
     }

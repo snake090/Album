@@ -22,6 +22,7 @@ import io.realm.RealmResults;
 public class Album_Query {
 
     public void Picture_Query(Album album,int id) {
+        /*
         Realm r = Realm.getDefaultInstance();
         RealmList<Picture_Info>picture_infos=new RealmList<>();
         RealmList<Picture_Info>picture_infos1=new RealmList<>();
@@ -45,7 +46,7 @@ public class Album_Query {
                 picture_infos1.addAll(picture_infos.subList(0,picture_infos.size()));
             }
         }
-        album.setPicture_infos(picture_infos1);
+        album.setPicture_infos(picture_infos1);*/
     }
     public ArrayList<String> Path_Query(int id){
         Realm r = Realm.getDefaultInstance();
@@ -65,6 +66,13 @@ public class Album_Query {
         }
 
         return path;
+    }
+
+    public RealmResults<Album> Id_Query(){
+        Realm r = Realm.getDefaultInstance();
+        RealmResults<Album>results=r.where(Album.class).findAll();
+        r.close();
+        return results;
     }
 
 

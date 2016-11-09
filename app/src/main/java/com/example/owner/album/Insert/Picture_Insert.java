@@ -29,7 +29,7 @@ public class Picture_Insert {
         Picture_Query picture_query = new Picture_Query();
         Picture_Info pictureInfo1 = null;
         RealmResults<Picture_Info> realmList = picture_query.Id_Query();
-        if (realmList.size() == 0l) {
+        if (realmList.size() == 0) {
             pictureInfo1 = r.createObject(Picture_Info.class, 1);
             pictureInfo1.setPath(path);
 

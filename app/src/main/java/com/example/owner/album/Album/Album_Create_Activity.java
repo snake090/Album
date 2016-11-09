@@ -13,20 +13,27 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.R;
+import com.example.owner.album.model.Album;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Album_Create_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText name;
     EditText date;
     EditText keyword1;
+    EditText keyword2;
+    EditText keyword3;
     Button create_album;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +52,10 @@ public class Album_Create_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        name=(EditText)findViewById(R.id.Name);
         keyword1=(EditText)findViewById(R.id.KeyWord1);
+        keyword2=(EditText)findViewById(R.id.KeyWord2);
+        keyword3=(EditText)findViewById(R.id.KeyWord3);
         date=(EditText)findViewById(R.id.Date);
         date.setOnClickListener(v->{
 
@@ -74,14 +84,33 @@ public class Album_Create_Activity extends AppCompatActivity
         });
         create_album =(Button)findViewById(R.id.Create);
         create_album.setOnClickListener(v->{
-            String keyword=keyword1.getText().toString();
-            Word_association word=new Word_association();
+            ArrayList<String> keywords=new ArrayList<String>();
+            if(!"".equals(keyword1.getText().toString())){
+                keywords.add(keyword1.getText().toString());
+            }
+            if(!"".equals(keyword2.getText().toString())){
+                keywords.add(keyword2.getText().toString());
+            }
+            if(!"".equals(keyword3.getText().toString())) {
+                keywords.add(keyword3.getText().toString());
+            }
+            String albumName=name.getText().toString();
+            if(keywords.size()!=0&&albumName!=null) {
+                Album_Insert album_insert = new Album_Insert();
+                album_insert.Insert_DB(albumName,keywords);
+                Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this,"Please enter album name or keyword",Toast.LENGTH_LONG).show();
+            }
+
+            /*
+            Word_association word=new Word_association("世界遺産");
             word.execute();
 
 
             WordsAPI wordsapi=new WordsAPI("");
             wordsapi.execute();
-
+*/
 
         });
     }
