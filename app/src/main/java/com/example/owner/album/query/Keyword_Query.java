@@ -17,5 +17,11 @@ public class Keyword_Query {
 
         return realmResults;
     }
+    public RealmResults<Keyword>Double_Check_Eng(String name){
+        Realm r = Realm.getDefaultInstance();
+        RealmResults<Keyword> realmResults=r.where(Keyword.class).equalTo("Keyword_Eng",name).findAll();
+
+        return realmResults;
+    }
 
 }

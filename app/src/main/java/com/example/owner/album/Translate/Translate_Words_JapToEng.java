@@ -2,11 +2,18 @@ package com.example.owner.album.Translate;
 
 import android.os.AsyncTask;
 
+import com.example.owner.album.Album.WordsAPI;
 import com.example.owner.album.Insert.Related_Words_Insert;
+import com.example.owner.album.model.Keyword;
+import com.example.owner.album.model.Related_Words;
+import com.example.owner.album.query.Keyword_Query;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 
 import java.util.ArrayList;
+
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by Owner on 2016/11/09.
@@ -41,7 +48,8 @@ public class Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<St
     @Override
     protected void onPostExecute(ArrayList<String> result) {
         Related_Words_Insert related_words_insert = new Related_Words_Insert();
-        related_words_insert.Insert_Keyword(result, keyword);
+        related_words_insert.Insert_Keyword_Jap(result, keyword);
+
 
     }
 }

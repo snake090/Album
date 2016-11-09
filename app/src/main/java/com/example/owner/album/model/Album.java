@@ -41,6 +41,9 @@ public class Album extends RealmObject{
         this.album_name = album_name;
     }
 
+    public RealmList<Keyword> getKeywords() {
+        return keywords;
+    }
 
     public RealmList<Picture_Info> getPicture_infos() {
         return picture_infos;

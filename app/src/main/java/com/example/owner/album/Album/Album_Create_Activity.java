@@ -20,6 +20,7 @@ import com.example.owner.album.R;
 import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Keyword;
 import com.example.owner.album.model.Related_Words;
+import com.example.owner.album.query.Album_Query;
 import com.example.owner.album.query.Keyword_Query;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -119,6 +120,8 @@ public class Album_Create_Activity extends AppCompatActivity
                         word_association.execute();
                     }
                 }
+
+
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Please enter album name or keyword",Toast.LENGTH_LONG).show();

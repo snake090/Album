@@ -2,12 +2,19 @@ package com.example.owner.album.Translate;
 
 import android.os.AsyncTask;
 
+import com.example.owner.album.Album.WordsAPI;
 import com.example.owner.album.Insert.Keyword_Insert;
 import com.example.owner.album.Insert.Related_Words_Insert;
+import com.example.owner.album.model.Keyword;
+import com.example.owner.album.model.Related_Words;
+import com.example.owner.album.query.Keyword_Query;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 
 import java.util.ArrayList;
+
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by Owner on 2016/11/09.
@@ -42,6 +49,21 @@ public class Translate_Keyword_JapToEng extends AsyncTask<Void, Void, ArrayList<
 
         Keyword_Insert keyword_insert=new Keyword_Insert();
         keyword_insert.Insert_Keyword(words,result);
+
+        Keyword_Query keyword_query=new Keyword_Query();
+        for(String keyword:result){
+            RealmResults<Keyword> realmResults=keyword_query.Double_Check_Eng(keyword);
+            if(realmResults.size()!=0) {
+                RealmList<Related_Words> realmList = realmResults.get(0).getRelated_wordses();
+                if (realmList.size() == 0) {
+                    WordsAPI wordsapi=new WordsAPI(keyword);
+                    wordsapi.execute();
+                }
+            }else{
+                WordsAPI wordsapi=new WordsAPI(keyword);
+                wordsapi.execute();
+            }
+        }
 
     }
 }

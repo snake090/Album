@@ -29,4 +29,12 @@ public class Keyword extends RealmObject {
     public void setKeyword_Eng(String keyword_Eng) {
         Keyword_Eng = keyword_Eng;
     }
+
+    public String getKeyword_Eng() {
+        return Keyword_Eng;
+    }
+
+    public String getKeyword_Jap() {
+        return Keyword_Jap;
+    }
 }

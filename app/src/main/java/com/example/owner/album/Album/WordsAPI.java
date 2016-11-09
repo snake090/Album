@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.owner.album.Insert.Picture_Insert;
+import com.example.owner.album.Insert.Related_Words_Insert;
 import com.example.owner.album.Translate.Translate_landmark_EngToJap;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -31,8 +32,6 @@ import java.util.ArrayList;
 
 public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
     private String words;
-    String accessToken = "QAlwM65b7AmshghYIFdHFYTNqAUcp1NBW6ijsnFxFXOcapvApV";
-    String detail = "definitions";
     StringBuilder sb = new StringBuilder();
     JSONArray jsonArray;
     ArrayList<String> message;
@@ -48,18 +47,13 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
 
         try {
             HttpURLConnection con = null;
-            URL url = new URL("https://wordsapiv1.p.mashape.com/words/bump/also");
+            URL url = new URL("https://wordsapiv1.p.mashape.com/words/"+words+"/hasCategories");
             con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setInstanceFollowRedirects(false);
             con.setRequestProperty("X-Mashape-Key", "QAlwM65b7AmshghYIFdHFYTNqAUcp1NBW6ijsnFxFXOcapvApV");
             con.setRequestProperty("Accept", "application/json");
             con.connect();
-            /*
-            InputStream in = con.getInputStream();
-            in.read(bodyByte);
-            in.close();
-            */
 
             // HTTPレスポンスコード
             final int status = con.getResponseCode();
@@ -76,7 +70,7 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
                 }
                 // 取得した文字列からjsonobjectを作成
                 JSONObject jsonObject = new JSONObject(sb.toString());
-                jsonArray = jsonObject.getJSONArray("also");
+                jsonArray = jsonObject.getJSONArray("hasCategories");
                 for(int i=0;i<jsonArray.length();i++){
                     message.add(jsonArray.get(i).toString());
                 }
@@ -87,13 +81,13 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
             e.getStackTrace();
         }
 
-
-
         return message;
 
     }
 
     protected void onPostExecute(ArrayList<String>result) {
 
+        Related_Words_Insert related_words_insert=new Related_Words_Insert();
+        related_words_insert.Insert_Keyword_Eng(result,words);
     }
 }
