@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                 longitude = exif.ExifHourMinSecToDegrees(longitude);
             }
 
-            Picture_Insert.Insert_Picture(file.getPath(), dateTime, latitude, longitude);
+            Picture_Insert.Insert_Picture(this,file.getPath(), dateTime, latitude, longitude);
 
         }
     }

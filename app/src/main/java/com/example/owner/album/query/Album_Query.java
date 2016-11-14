@@ -7,6 +7,7 @@ import com.example.owner.album.model.Album_Name_Related_Words;
 import com.example.owner.album.model.Picture_Info;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -73,6 +74,13 @@ public class Album_Query {
         RealmResults<Album>results=r.where(Album.class).findAll();
         r.close();
         return results;
+    }
+
+    public RealmList<Picture_Info> Relation_Album(RealmResults<Album> realmResults, int keyWordCondition, Date date,int DateCondition){
+
+        RealmList<Picture_Info>picture_infos=new RealmList<>();
+
+        return picture_infos;
     }
 
 

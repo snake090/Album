@@ -48,4 +48,5 @@ public class Album extends RealmObject{
     public RealmList<Picture_Info> getPicture_infos() {
         return picture_infos;
     }
+
 }

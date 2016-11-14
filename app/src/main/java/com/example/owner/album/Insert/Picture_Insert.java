@@ -1,8 +1,10 @@
 package com.example.owner.album.Insert;
 
 
+import android.content.Context;
 import android.net.ParseException;
 
+import com.example.owner.album.locationInformation.Get_Address;
 import com.example.owner.album.model.Classification_Info_Eng;
 import com.example.owner.album.model.Picture_Info;
 import com.example.owner.album.query.Picture_Query;
@@ -22,7 +24,7 @@ import io.realm.Sort;
  */
 
 public class Picture_Insert {
-    public static void Insert_Picture(String path, String dateTime, String latitude, String longitude) throws ParseException {
+    public static void Insert_Picture(Context context, String path, String dateTime, String latitude, String longitude) throws ParseException {
         Realm r = Realm.getDefaultInstance();
         r.beginTransaction();
 
@@ -42,6 +44,10 @@ public class Picture_Insert {
             }
             pictureInfo1.setLongitude(longitude);
             pictureInfo1.setLatitude(latitude);
+            Get_Address get_address=new Get_Address();
+            String adress=get_address.getAddress(context,longitude,latitude);
+            pictureInfo1.setAddress(adress);
+
         } else {
             realmList = realmList.sort("id", Sort.DESCENDING);
             int id = realmList.get(0).getId();
@@ -56,6 +62,9 @@ public class Picture_Insert {
             }
             pictureInfo1.setLongitude(longitude);
             pictureInfo1.setLatitude(latitude);
+            Get_Address get_address=new Get_Address();
+            String adress=get_address.getAddress(context,longitude,latitude);
+            pictureInfo1.setAddress(adress);
         }
         r.commitTransaction();
         r.close();

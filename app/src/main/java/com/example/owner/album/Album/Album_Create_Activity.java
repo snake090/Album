@@ -124,18 +124,14 @@ public class Album_Create_Activity extends AppCompatActivity
 
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
-                Toast.makeText(this,"Please enter album name or keyword",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();
             }
 
+            try{
+                Thread.sleep(5000);
+            }catch (InterruptedException e){
+            }
 
-            /*
-            Word_association word=new Word_association("世界遺産");
-            word.execute();
-
-
-            WordsAPI wordsapi=new WordsAPI("");
-            wordsapi.execute();
-*/
 
         });
     }

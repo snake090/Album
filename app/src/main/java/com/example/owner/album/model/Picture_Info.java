@@ -24,6 +24,7 @@ public class Picture_Info extends RealmObject {
     private String latitude;
     private String landmark_eng;
     private String landmark_jap;
+    private String address;
 
     public void setClassification_info_engs(RealmList<Classification_Info_Eng> classification_info_engs) {
         this.classification_info_engs = classification_info_engs;
@@ -69,5 +70,7 @@ public class Picture_Info extends RealmObject {
         return path;
     }
 
-
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

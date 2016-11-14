@@ -1,5 +1,6 @@
 package com.example.owner.album.Album;
 
+import android.content.Entity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -25,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Owner on 2016/11/08.
@@ -35,6 +38,7 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
     StringBuilder sb = new StringBuilder();
     JSONArray jsonArray;
     ArrayList<String> message;
+
     public WordsAPI(String word) {
         super();
         words = word;
@@ -47,8 +51,8 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
 
         try {
             HttpURLConnection con = null;
-            URL url = new URL("https://wordsapiv1.p.mashape.com/words/"+words+"/hasCategories");
-            con = (HttpURLConnection)url.openConnection();
+            URL url = new URL("https://wordsapiv1.p.mashape.com/words/" + words);
+            con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setInstanceFollowRedirects(false);
             con.setRequestProperty("X-Mashape-Key", "QAlwM65b7AmshghYIFdHFYTNqAUcp1NBW6ijsnFxFXOcapvApV");
@@ -59,35 +63,63 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
             final int status = con.getResponseCode();
             if (status == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-
-
-                StringBuilder result = new StringBuilder();
-
                 String line;
-
                 while ((line = in.readLine()) != null) {
                     sb.append(line);
                 }
-                // 取得した文字列からjsonobjectを作成
-                JSONObject jsonObject = new JSONObject(sb.toString());
-                jsonArray = jsonObject.getJSONArray("hasCategories");
-                for(int i=0;i<jsonArray.length();i++){
-                    message.add(jsonArray.get(i).toString());
+                JSONObject rootObject = new JSONObject(sb.toString());
+                JSONArray rootArray = rootObject.getJSONArray("results");
+                ArrayList<JSONObject> jsonObject = new ArrayList<>();
+                for (int i = 0; i < rootArray.length(); i++) {
+                    jsonObject.add(rootArray.getJSONObject(i));
                 }
+
+                for (int i = 0; i < jsonObject.size(); i++) {
+                    getWord(jsonObject.get(i), "synonyms");
+                    getWord(jsonObject.get(i), "hasCategories");
+                    getWord(jsonObject.get(i), "typeOf");
+                    getWord(jsonObject.get(i), "hasTypes");
+                    getWord(jsonObject.get(i), "memberOf");
+                    getWord(jsonObject.get(i), "hasParts");
+                    getWord(jsonObject.get(i), "hasInstances");
+                    getWord(jsonObject.get(i), "hasMembers");
+                    getWord(jsonObject.get(i), "hasSubstances");
+                    getWord(jsonObject.get(i), "hatchback");
+                    getWord(jsonObject.get(i), "instanceOf");
+                    getWord(jsonObject.get(i), "partOf");
+                    getWord(jsonObject.get(i), "pertainsTo");
+                    getWord(jsonObject.get(i), "regionOf");
+                    getWord(jsonObject.get(i), "similarTo");
+                    getWord(jsonObject.get(i), "usageOf");
+                }
+
+
             }
 
             System.out.print("");
-        }catch (Exception e){
-            e.getStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("json", e.getMessage());
         }
 
         return message;
 
     }
 
-    protected void onPostExecute(ArrayList<String>result) {
+    private void getWord(JSONObject jsonObject, String word) {
+        try {
+            jsonArray = jsonObject.getJSONArray(word);
+            for (int j = 0; j < jsonArray.length(); j++) {
+                message.add(jsonArray.get(j).toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-        Related_Words_Insert related_words_insert=new Related_Words_Insert();
-        related_words_insert.Insert_Keyword_Eng(result,words);
+    protected void onPostExecute(ArrayList<String> result) {
+
+        Related_Words_Insert related_words_insert = new Related_Words_Insert();
+        related_words_insert.Insert_Keyword_Eng(result, words);
     }
 }
