@@ -97,18 +97,25 @@ public class Album_Insert {
         translate_keyword_japToEng.execute();
     }
 
-    public void Insert_Picture_Info(){
+    public void Insert_Picture_Info(int keyWordCondition,String date,int dateCondition){
+
         Realm r = Realm.getDefaultInstance();
         r.beginTransaction();
         Album_Query query=new Album_Query();
-        RealmList<Picture_Info> picture_infos=query.Relation_Album();
+
 
         Album_Query album_query=new Album_Query();
         RealmResults<Album> alba=album_query.Id_Query();
         alba=alba.sort("album_id", Sort.DESCENDING);
         int id=alba.get(0).getAlbum_id();
         Album album=r.where(Album.class).equalTo("album_id",id).findFirst();
+        RealmList<Picture_Info> picture_infos=query.Relation_Album(album,keyWordCondition,date,dateCondition);
         album.setPicture_infos(picture_infos);
+
+        r.commitTransaction();
+        r.close();
+
+        Log.d("dbFinish","picture");
 
     }
 

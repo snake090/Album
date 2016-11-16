@@ -29,6 +29,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -114,6 +116,7 @@ public class Album_Create_Activity extends AppCompatActivity
                         if (realmList.size() == 0) {
                             Word_association word_association = new Word_association(keyword);
                             word_association.execute();
+
                         }
                     }else{
                         Word_association word_association = new Word_association(keyword);
@@ -121,15 +124,11 @@ public class Album_Create_Activity extends AppCompatActivity
                     }
                 }
 
+                album_insert.Insert_Picture_Info(0,date.getText().toString(),0);
 
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();
-            }
-
-            try{
-                Thread.sleep(5000);
-            }catch (InterruptedException e){
             }
 
 

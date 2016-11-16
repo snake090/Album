@@ -6,10 +6,13 @@ import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Album_Name_Related_Words;
 import com.example.owner.album.model.Picture_Info;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import io.realm.Realm;
@@ -22,7 +25,7 @@ import io.realm.RealmResults;
 
 public class Album_Query {
 
-    public void Picture_Query(Album album,int id) {
+    public void Picture_Query(Album album, int id) {
         /*
         Realm r = Realm.getDefaultInstance();
         RealmList<Picture_Info>picture_infos=new RealmList<>();
@@ -49,36 +52,54 @@ public class Album_Query {
         }
         album.setPicture_infos(picture_infos1);*/
     }
-    public ArrayList<String> Path_Query(int id){
+
+    public ArrayList<String> Path_Query(int id) {
         Realm r = Realm.getDefaultInstance();
         RealmResults<Album> results = r.where(Album.class).equalTo("album_id", id).findAll();
-        Set<String> hashSet=new HashSet<>();
-        for(Picture_Info pictureInfo: results.get(0).getPicture_infos()){
+        Set<String> hashSet = new HashSet<>();
+        for (Picture_Info pictureInfo : results.get(0).getPicture_infos()) {
             hashSet.add(pictureInfo.getPath());
         }
-        ArrayList<String>path=new ArrayList<>();
+        ArrayList<String> path = new ArrayList<>();
 
-        for(Iterator<String> iterator = hashSet.iterator(); iterator.hasNext(); ) {
+        for (Iterator<String> iterator = hashSet.iterator(); iterator.hasNext(); ) {
             path.add(iterator.next());
         }
 
-        for(int i=0;i<path.size();i++){
-            Log.d("for",path.get(i));
+        for (int i = 0; i < path.size(); i++) {
+            Log.d("for", path.get(i));
         }
 
         return path;
     }
 
-    public RealmResults<Album> Id_Query(){
+    public RealmResults<Album> Id_Query() {
         Realm r = Realm.getDefaultInstance();
-        RealmResults<Album>results=r.where(Album.class).findAll();
+        RealmResults<Album> results = r.where(Album.class).findAll();
         r.close();
         return results;
     }
 
-    public RealmList<Picture_Info> Relation_Album(RealmResults<Album> realmResults, int keyWordCondition, Date date,int DateCondition){
+    public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, int DateCondition) {
 
-        RealmList<Picture_Info>picture_infos=new RealmList<>();
+        RealmList<Picture_Info> picture_infos = new RealmList<>();
+        if("".equals(dateTime)){
+            System.out.print("");
+        }else {
+            dateTime = dateTime.replaceAll("/", ":");
+            dateTime = dateTime + " 00:00:00";
+
+            DateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
+            java.util.Date date;
+            try {
+                date = format.parse(dateTime);
+                System.out.print("");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.print("");
+        }
 
         return picture_infos;
     }

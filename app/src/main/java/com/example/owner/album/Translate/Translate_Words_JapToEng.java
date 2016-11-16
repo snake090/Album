@@ -11,6 +11,7 @@ import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -19,7 +20,7 @@ import io.realm.RealmResults;
  * Created by Owner on 2016/11/09.
  */
 
-public class Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<String>> {
+public class  Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<String>> {
     private ArrayList<String> words;
     private String keyword;
 
@@ -49,7 +50,6 @@ public class Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<St
     protected void onPostExecute(ArrayList<String> result) {
         Related_Words_Insert related_words_insert = new Related_Words_Insert();
         related_words_insert.Insert_Keyword_Jap(result, keyword);
-
 
     }
 }

@@ -15,6 +15,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Owner on 2016/11/09.
@@ -22,19 +23,21 @@ import java.util.ArrayList;
 
 public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
 
-    private  String word;
+    private String word;
+
+
     public Word_association(String word) {
         super();
-        this.word=word;
+        this.word = word;
     }
 
     @Override
     protected ArrayList<String> doInBackground(Void... value) {
-        ArrayList<String>message = new ArrayList<String>();
+        ArrayList<String> message = new ArrayList<String>();
         try {
             HttpURLConnection con = null;
-            URL url = new URL("http://kizasi.jp/kizapi.py?span=24&kw_expr="+word+"&type=coll");
-            con = (HttpURLConnection)url.openConnection();
+            URL url = new URL("http://kizasi.jp/kizapi.py?span=24&kw_expr=" + word + "&type=coll");
+            con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setInstanceFollowRedirects(false);
             // HTTPレスポンスコード
@@ -51,7 +54,7 @@ public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
 
                 while ((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT) {
                     if (eventType == XmlPullParser.START_TAG && "title".equals(xpp.getName())) {
-                         message.add( xpp.nextText());
+                        message.add(xpp.nextText());
                     }
                 }
 
@@ -59,20 +62,20 @@ public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
             message.remove(0);
             message.remove(0);
             System.out.print("");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getStackTrace();
         }
         return message;
     }
-    protected void onPostExecute(ArrayList<String>result) {
 
-        ArrayList<String>keyword=new ArrayList<>();
-        for(int i=0;i<10;i++){
+    protected void onPostExecute(ArrayList<String> result) {
+
+        ArrayList<String> keyword = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
             keyword.add(result.get(i));
         }
-        Translate_Words_JapToEng translate_words_JapToEng =new Translate_Words_JapToEng(keyword,word);
+        Translate_Words_JapToEng translate_words_JapToEng = new Translate_Words_JapToEng(keyword, word);
         translate_words_JapToEng.execute();
-
 
     }
 

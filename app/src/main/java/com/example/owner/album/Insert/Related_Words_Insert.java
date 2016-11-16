@@ -1,5 +1,7 @@
 package com.example.owner.album.Insert;
 
+import android.util.Log;
+
 import com.example.owner.album.model.Keyword;
 import com.example.owner.album.model.Related_Words;
 
@@ -37,6 +39,7 @@ public class Related_Words_Insert {
 
         r.commitTransaction();
         r.close();
+        Log.d("dbFinish","japkeyword");
 
     }
 
@@ -57,6 +60,8 @@ public class Related_Words_Insert {
 
         r.commitTransaction();
         r.close();
+
+        Log.d("dbFinish","engkeyword");
 
     }
 }
