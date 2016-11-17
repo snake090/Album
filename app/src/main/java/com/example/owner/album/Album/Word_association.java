@@ -1,6 +1,7 @@
 package com.example.owner.album.Album;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.owner.album.Translate.Translate_Words_JapToEng;
 
@@ -26,8 +27,8 @@ public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
     private String word;
 
 
+
     public Word_association(String word) {
-        super();
         this.word = word;
     }
 
@@ -74,8 +75,8 @@ public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
         for (int i = 0; i < 10; i++) {
             keyword.add(result.get(i));
         }
-        Translate_Words_JapToEng translate_words_JapToEng = new Translate_Words_JapToEng(keyword, word);
-        translate_words_JapToEng.execute();
+        new Translate_Words_JapToEng(keyword,word).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
     }
 

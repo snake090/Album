@@ -56,6 +56,10 @@ public class Related_Words_Insert {
         }
 
         Keyword keyword1=r.where(Keyword.class).equalTo("Keyword_Eng",keyword).findFirst();
+        RealmList<Related_Words> related_wordses=keyword1.getRelated_wordses();
+        for(Related_Words related_words1:related_wordses){
+            relatedWordsRealmList.add(related_words1);
+        }
         keyword1.setRelated_wordses(relatedWordsRealmList);
 
         r.commitTransaction();

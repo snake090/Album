@@ -60,8 +60,7 @@ public class Translate_Keyword_JapToEng extends AsyncTask<Void, Void, ArrayList<
                     wordsapi.execute();
                 }
             }else{
-                WordsAPI wordsapi=new WordsAPI(keyword);
-                wordsapi.execute();
+                new WordsAPI(keyword).execute();
             }
         }
 

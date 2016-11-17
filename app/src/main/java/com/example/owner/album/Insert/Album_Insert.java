@@ -93,8 +93,9 @@ public class Album_Insert {
         }
         r.commitTransaction();
         r.close();
-        Translate_Keyword_JapToEng translate_keyword_japToEng=new Translate_Keyword_JapToEng(keyword);
-        translate_keyword_japToEng.execute();
+        //WordsAPI
+        new Translate_Keyword_JapToEng(keyword).execute();
+
     }
 
     public void Insert_Picture_Info(int keyWordCondition,String date,int dateCondition){
@@ -114,8 +115,9 @@ public class Album_Insert {
 
         r.commitTransaction();
         r.close();
-
+        Log.d("related_word",album.getKeywords().get(0).getRelated_wordses().get(0).getRelated_words());
         Log.d("dbFinish","picture");
+
 
     }
 

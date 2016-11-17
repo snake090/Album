@@ -1,6 +1,7 @@
 package com.example.owner.album.Album;
 
 import android.app.DatePickerDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -82,7 +83,7 @@ public class Album_Create_Activity extends AppCompatActivity
 
                         public void onDateSet(DatePicker view,
                                               int year, int monthOfYear, int dayOfMonth) {
-                            date.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear)+"/"+String.valueOf(dayOfMonth));
+                            date.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear)+1+"/"+String.valueOf(dayOfMonth));
                         }
                     },
                     year, month, day);
@@ -114,17 +115,15 @@ public class Album_Create_Activity extends AppCompatActivity
                     if(realmResults.size()!=0) {
                         RealmList<Related_Words> realmList = realmResults.get(0).getRelated_wordses();
                         if (realmList.size() == 0) {
-                            Word_association word_association = new Word_association(keyword);
-                            word_association.execute();
+                            new Word_association(keyword).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                         }
                     }else{
-                        Word_association word_association = new Word_association(keyword);
-                        word_association.execute();
+                        new Word_association(keyword).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                     }
                 }
 
-                album_insert.Insert_Picture_Info(0,date.getText().toString(),0);
+                new Album_Related(0,date.getText().toString(),0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{

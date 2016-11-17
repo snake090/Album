@@ -3,6 +3,7 @@ package com.example.owner.album.Translate;
 import android.os.AsyncTask;
 
 import com.example.owner.album.Album.WordsAPI;
+import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.Insert.Related_Words_Insert;
 import com.example.owner.album.model.Keyword;
 import com.example.owner.album.model.Related_Words;
@@ -24,9 +25,11 @@ public class  Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<S
     private ArrayList<String> words;
     private String keyword;
 
+
     public Translate_Words_JapToEng(ArrayList<String> words, String keyword) {
         this.words = words;
         this.keyword = keyword;
+
     }
 
     @Override

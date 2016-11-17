@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Album_Name_Related_Words;
+import com.example.owner.album.model.Keyword;
 import com.example.owner.album.model.Picture_Info;
+import com.example.owner.album.model.Related_Words;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -25,54 +28,6 @@ import io.realm.RealmResults;
 
 public class Album_Query {
 
-    public void Picture_Query(Album album, int id) {
-        /*
-        Realm r = Realm.getDefaultInstance();
-        RealmList<Picture_Info>picture_infos=new RealmList<>();
-        RealmList<Picture_Info>picture_infos1=new RealmList<>();
-        RealmResults<Album> results = r.where(Album.class).equalTo("album_id", id).findAll();
-        RealmResults<Picture_Info> results1 = r.where(Picture_Info.class).equalTo("tags.classification_info_engs.name", results.get(0).getGetAlbum_name_eng())
-                .or()
-                .equalTo("tags.classification_info_engs.related_wordses.related_words", results.get(0).getGetAlbum_name_eng()).findAll();
-        if(results1.size()!=0){
-            picture_infos.addAll(results1.subList(0,results1.size()));
-            picture_infos1.addAll(picture_infos.subList(0,picture_infos.size()));
-        }
-
-        for (Album_Name_Related_Words album_name_related_words : results.get(0).getAlbum_name_related_wordses()) {
-            RealmResults<Picture_Info>results2 = r.where(Picture_Info.class).equalTo("tags.classification_info_engs.name", album_name_related_words.getAlbum_nmae_related_words())
-                    .or()
-                    .equalTo("tags.classification_info_engs.related_wordses.related_words", album_name_related_words.getAlbum_nmae_related_words())
-                    .findAll();
-            Log.d("for",Integer.toString(results2.size()) );
-            if(results2.size()!=0){
-                picture_infos.addAll(results2.subList(0,results2.size()));
-                picture_infos1.addAll(picture_infos.subList(0,picture_infos.size()));
-            }
-        }
-        album.setPicture_infos(picture_infos1);*/
-    }
-
-    public ArrayList<String> Path_Query(int id) {
-        Realm r = Realm.getDefaultInstance();
-        RealmResults<Album> results = r.where(Album.class).equalTo("album_id", id).findAll();
-        Set<String> hashSet = new HashSet<>();
-        for (Picture_Info pictureInfo : results.get(0).getPicture_infos()) {
-            hashSet.add(pictureInfo.getPath());
-        }
-        ArrayList<String> path = new ArrayList<>();
-
-        for (Iterator<String> iterator = hashSet.iterator(); iterator.hasNext(); ) {
-            path.add(iterator.next());
-        }
-
-        for (int i = 0; i < path.size(); i++) {
-            Log.d("for", path.get(i));
-        }
-
-        return path;
-    }
-
     public RealmResults<Album> Id_Query() {
         Realm r = Realm.getDefaultInstance();
         RealmResults<Album> results = r.where(Album.class).findAll();
@@ -80,28 +35,201 @@ public class Album_Query {
         return results;
     }
 
-    public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, int DateCondition) {
+    public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, int dateCondition) {
 
         RealmList<Picture_Info> picture_infos = new RealmList<>();
-        if("".equals(dateTime)){
+        java.util.Date date = null;
+        if ("".equals(dateTime)) {
             System.out.print("");
-        }else {
+        } else {
             dateTime = dateTime.replaceAll("/", ":");
             dateTime = dateTime + " 00:00:00";
 
             DateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
-            java.util.Date date;
+
             try {
                 date = format.parse(dateTime);
-                System.out.print("");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            System.out.print("");
         }
+        Realm r = Realm.getDefaultInstance();
+        RealmList<Keyword> keywordRealmList = album.getKeywords();
+        //キーワードが一つ
+        if (keywordRealmList.size() == 1) {
+            //日付無
+            if ("".equals(dateTime)) {
+                RealmResults<Picture_Info> RealmResults = r.where(Picture_Info.class).equalTo("classification_info_engs.name", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).or()
+                        .contains("address", keywordRealmList.get(0).getKeyword_Jap(), Case.INSENSITIVE).or()
+                        .equalTo("landmark_eng", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).findAll();
+                if (RealmResults.size() != 0) {
+                    RealmList<Picture_Info> results = new RealmList<>();
+                    results.addAll(RealmResults.subList(0, RealmResults.size()));
+                    addList(picture_infos, results);
+                }
+                for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
+                    RealmResults<Picture_Info> RealmResults1 = r.where(Picture_Info.class).equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                            .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                            .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE).findAll();
+                    if (RealmResults1.size() != 0) {
+                        RealmList<Picture_Info> results = new RealmList<>();
+                        results.addAll(RealmResults1.subList(0, RealmResults1.size()));
+                        addList(picture_infos, results);
+                    }
+                }
+                //日付あり
+            } else {
+                //before
+                if (dateCondition == 0) {
+                    RealmResults<Picture_Info> RealmResults = r.where(Picture_Info.class).equalTo("classification_info_engs.name", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).or()
+                            .contains("address", keywordRealmList.get(0).getKeyword_Jap(), Case.INSENSITIVE).or()
+                            .equalTo("landmark_eng", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE)
+                            .lessThan("date", date).findAll();
+
+                    if (RealmResults.size() != 0) {
+                        RealmList<Picture_Info> results = new RealmList<>();
+                        results.addAll(RealmResults.subList(0, RealmResults.size()));
+                        addList(picture_infos, results);
+                    }
+                    for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
+                        RealmResults<Picture_Info> RealmResults1 = r.where(Picture_Info.class).equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE)
+                                .lessThan("date", date).findAll();
+                        if (RealmResults1.size() != 0) {
+                            RealmList<Picture_Info> results = new RealmList<>();
+                            results.addAll(RealmResults1.subList(0, RealmResults1.size()));
+                            addList(picture_infos, results);
+                        }
+                    }
+                    //その日
+                } else if (dateCondition == 1) {
+                    RealmResults<Picture_Info> RealmResults = r.where(Picture_Info.class).equalTo("classification_info_engs.name", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).or()
+                            .contains("address", keywordRealmList.get(0).getKeyword_Jap(), Case.INSENSITIVE).or()
+                            .equalTo("landmark_eng", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE)
+                            .equalTo("date", date).findAll();
+
+                    if (RealmResults.size() != 0) {
+                        RealmList<Picture_Info> results = new RealmList<>();
+                        results.addAll(RealmResults.subList(0, RealmResults.size()));
+                        addList(picture_infos, results);
+                    }
+                    for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
+                        RealmResults<Picture_Info> RealmResults1 = r.where(Picture_Info.class).equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE)
+                                .equalTo("date", date).findAll();
+                        if (RealmResults1.size() != 0) {
+                            RealmList<Picture_Info> results = new RealmList<>();
+                            results.addAll(RealmResults1.subList(0, RealmResults1.size()));
+                            addList(picture_infos, results);
+                        }
+
+                    }
+                }else if(dateCondition==2){
+                    RealmResults<Picture_Info> RealmResults = r.where(Picture_Info.class).equalTo("classification_info_engs.name", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).or()
+                            .contains("address", keywordRealmList.get(0).getKeyword_Jap(), Case.INSENSITIVE).or()
+                            .equalTo("landmark_eng", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE)
+                            .greaterThan("date", date).findAll();
+
+                    if (RealmResults.size() != 0) {
+                        RealmList<Picture_Info> results = new RealmList<>();
+                        results.addAll(RealmResults.subList(0, RealmResults.size()));
+                        addList(picture_infos, results);
+                    }
+                    for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
+                        RealmResults<Picture_Info> RealmResults1 = r.where(Picture_Info.class).equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE)
+                                .greaterThan("date", date).findAll();
+                        if (RealmResults1.size() != 0) {
+                            RealmList<Picture_Info> results = new RealmList<>();
+                            results.addAll(RealmResults1.subList(0, RealmResults1.size()));
+                            addList(picture_infos, results);
+                        }
+
+                    }
+                }
+            }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //キーワード2つ
+        }else if(keywordRealmList.size()==2){
+            //AND検索
+            if(keyWordCondition==1){
+                //日付無
+                if ("".equals(dateTime)) {
+                    //キーワード
+                    RealmResults<Picture_Info> RealmResults = r.where(Picture_Info.class).equalTo("classification_info_engs.name", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).or()
+                            .contains("address", keywordRealmList.get(0).getKeyword_Jap(), Case.INSENSITIVE).or()
+                            .equalTo("landmark_eng", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).findAll();
+                    if (RealmResults.size() != 0) {
+                        //キーワードとキーワード
+                        RealmResults<Picture_Info> realmResults=RealmResults.where().equalTo("classification_info_engs.name", keywordRealmList.get(1).getKeyword_Eng(), Case.INSENSITIVE).or()
+                                .contains("address", keywordRealmList.get(1).getKeyword_Jap(), Case.INSENSITIVE).or()
+                                .equalTo("landmark_eng", keywordRealmList.get(1).getKeyword_Eng(), Case.INSENSITIVE).findAll();
+                        if(realmResults.size()!=0){
+                            RealmList<Picture_Info> results = new RealmList<>();
+                            results.addAll(realmResults.subList(0, realmResults.size()));
+                            addList(picture_infos, results);
+                        }
+                        //キーワードと関連語
+                        for(Related_Words related_words:keywordRealmList.get(1).getRelated_wordses()){
+                            RealmResults<Picture_Info> RealmResults1 = RealmResults.where().equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                    .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                    .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE).findAll();
+                            if (RealmResults1.size() != 0) {
+                                RealmList<Picture_Info> results = new RealmList<>();
+                                results.addAll(RealmResults1.subList(0, RealmResults1.size()));
+                                addList(picture_infos, results);
+                            }
+                        }
+                    }
+                    //関連語
+                    for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
+                        RealmResults<Picture_Info> RealmResults1 = RealmResults.where().equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
+                                .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE).findAll();
+                        //関連語とキーワード
+                        if (RealmResults1.size() != 0) {
+                            RealmResults<Picture_Info> realmResults=RealmResults1.where().equalTo("classification_info_engs.name", keywordRealmList.get(1).getKeyword_Eng(), Case.INSENSITIVE).or()
+                                    .contains("address", keywordRealmList.get(1).getKeyword_Jap(), Case.INSENSITIVE).or()
+                                    .equalTo("landmark_eng", keywordRealmList.get(1).getKeyword_Eng(), Case.INSENSITIVE).findAll();
+                            if(realmResults.size()!=0){
+                                RealmList<Picture_Info> results = new RealmList<>();
+                                results.addAll(realmResults.subList(0, realmResults.size()));
+                                addList(picture_infos, results);
+                            }
+                            //関連語と関連語
+                            for(Related_Words related_words1:keywordRealmList.get(1).getRelated_wordses()){
+                                RealmResults<Picture_Info> RealmResults2 = RealmResults.where().equalTo("classification_info_engs.name", related_words1.getRelated_words(), Case.INSENSITIVE).or()
+                                        .contains("address", related_words1.getRelated_words(), Case.INSENSITIVE).or()
+                                        .equalTo("landmark_eng", related_words1.getRelated_words(), Case.INSENSITIVE).findAll();
+                                if (RealmResults2.size() != 0) {
+                                    RealmList<Picture_Info> results = new RealmList<>();
+                                    results.addAll(RealmResults2.subList(0, RealmResults2.size()));
+                                    addList(picture_infos, results);
+                                }
+                            }
+                        }
+                    }
+                    //日付あり
+                }else {
+
+                }
+            }
+        }
+        System.out.print("");
+
 
         return picture_infos;
+    }
+
+
+    private void addList(RealmList<Picture_Info> picture_infos, RealmList<Picture_Info> results) {
+        for (Picture_Info pictureInfo : results) {
+            picture_infos.add(pictureInfo);
+        }
     }
 
 

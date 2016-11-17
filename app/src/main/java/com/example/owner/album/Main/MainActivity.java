@@ -339,8 +339,8 @@ public class MainActivity extends AppCompatActivity
                 Classification_Info_Eng_Insert classification_Info_Eng_Insert = new Classification_Info_Eng_Insert();
                 classification_Info_Eng_Insert.Insert_Classification_Info(result);
 
-                TranslateEngToJap translate = new TranslateEngToJap(result);
-                translate.execute();
+
+                new TranslateEngToJap(result).execute();
 
                 Picture_Query picture_query = new Picture_Query();
                 ArrayList<String> path = picture_query.Query();
