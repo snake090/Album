@@ -83,7 +83,7 @@ public class Album_Create_Activity extends AppCompatActivity
 
                         public void onDateSet(DatePicker view,
                                               int year, int monthOfYear, int dayOfMonth) {
-                            date.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear)+1+"/"+String.valueOf(dayOfMonth));
+                            date.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth));
                         }
                     },
                     year, month, day);
@@ -106,7 +106,7 @@ public class Album_Create_Activity extends AppCompatActivity
             }
             String albumName=name.getText().toString();
             if(keywords.size()!=0&&albumName!=null) {
-                new ControlTask(keywords,albumName,0,date.getText().toString(),0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new ControlTask(keywords,albumName,1,date.getText().toString(),0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();
