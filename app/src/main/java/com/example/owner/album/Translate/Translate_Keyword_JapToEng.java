@@ -12,6 +12,7 @@ import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -22,9 +23,11 @@ import io.realm.RealmResults;
 
 public class Translate_Keyword_JapToEng extends AsyncTask<Void, Void, ArrayList<String>> {
     private ArrayList<String> words;
+    private CountDownLatch _latch;
 
-    public Translate_Keyword_JapToEng(ArrayList<String> words) {
+    public Translate_Keyword_JapToEng(ArrayList<String> words, CountDownLatch _latch) {
         this.words = words;
+        this._latch = _latch;
     }
 
     @Override
@@ -56,11 +59,11 @@ public class Translate_Keyword_JapToEng extends AsyncTask<Void, Void, ArrayList<
             if(realmResults.size()!=0) {
                 RealmList<Related_Words> realmList = realmResults.get(0).getRelated_wordses();
                 if (realmList.size() == 0) {
-                    WordsAPI wordsapi=new WordsAPI(keyword);
-                    wordsapi.execute();
+                    WordsAPI wordsapi=new WordsAPI(keyword,_latch);
+                    wordsapi.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }else{
-                new WordsAPI(keyword).execute();
+                new WordsAPI(keyword,_latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
 

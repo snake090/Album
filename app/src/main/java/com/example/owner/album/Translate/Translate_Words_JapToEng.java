@@ -24,12 +24,13 @@ import io.realm.RealmResults;
 public class  Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<String>> {
     private ArrayList<String> words;
     private String keyword;
+    private CountDownLatch _latch;
 
 
-    public Translate_Words_JapToEng(ArrayList<String> words, String keyword) {
+    public Translate_Words_JapToEng(ArrayList<String> words, String keyword, CountDownLatch _latch) {
         this.words = words;
         this.keyword = keyword;
-
+        this._latch = _latch;
     }
 
     @Override
@@ -53,6 +54,7 @@ public class  Translate_Words_JapToEng extends AsyncTask<Void, Void, ArrayList<S
     protected void onPostExecute(ArrayList<String> result) {
         Related_Words_Insert related_words_insert = new Related_Words_Insert();
         related_words_insert.Insert_Keyword_Jap(result, keyword);
+        _latch.countDown();
 
     }
 }

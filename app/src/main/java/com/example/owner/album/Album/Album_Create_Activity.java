@@ -106,25 +106,7 @@ public class Album_Create_Activity extends AppCompatActivity
             }
             String albumName=name.getText().toString();
             if(keywords.size()!=0&&albumName!=null) {
-                Album_Insert album_insert = new Album_Insert();
-                album_insert.Insert_DB(albumName,keywords);
-                Keyword_Query keyword_query=new Keyword_Query();
-
-                for(String keyword:keywords){
-                   RealmResults<Keyword> realmResults=keyword_query.Double_Check(keyword);
-                    if(realmResults.size()!=0) {
-                        RealmList<Related_Words> realmList = realmResults.get(0).getRelated_wordses();
-                        if (realmList.size() == 0) {
-                            new Word_association(keyword).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                        }
-                    }else{
-                        new Word_association(keyword).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
-                    }
-                }
-
-                new Album_Related(0,date.getText().toString(),0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+                new ControlTask(keywords,albumName,0,date.getText().toString(),0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();

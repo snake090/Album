@@ -25,11 +25,12 @@ import java.util.concurrent.CountDownLatch;
 public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
 
     private String word;
+    private CountDownLatch _latch;
 
 
-
-    public Word_association(String word) {
+    public Word_association(String word, CountDownLatch _latch) {
         this.word = word;
+        this._latch = _latch;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class Word_association extends AsyncTask<Void, Void, ArrayList<String>> {
         for (int i = 0; i < 10; i++) {
             keyword.add(result.get(i));
         }
-        new Translate_Words_JapToEng(keyword,word).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new Translate_Words_JapToEng(keyword,word,_latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
     }

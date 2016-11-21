@@ -12,15 +12,17 @@ import java.util.concurrent.TimeUnit;
  * Created by Owner on 2016/11/17.
  */
 
-public class Album_Related  extends AsyncTask<Void, Void, Boolean> {
+public class Album_Related extends AsyncTask<Void, Void, Boolean> {
     private int keyWordCondition;
     private String date;
     private int dateCondition;
+    private CountDownLatch _latch;
 
-    public Album_Related(int keyWordCondition, String date, int dateCondition) {
+    public Album_Related(int keyWordCondition, String date, int dateCondition, CountDownLatch _latch) {
         this.keyWordCondition = keyWordCondition;
         this.date = date;
         this.dateCondition = dateCondition;
+        this._latch = _latch;
     }
 
     @Override
@@ -31,19 +33,13 @@ public class Album_Related  extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        Log.d("db","wait");
-        try {
-            Thread.sleep(10000);
-        }catch (Exception e){
-
-        }
-        Log.d("db","related");
-        new Album_Insert().Insert_Picture_Info(keyWordCondition,date,dateCondition);
+        new Album_Insert().Insert_Picture_Info(keyWordCondition, date, dateCondition);
         return false;
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
+        _latch.countDown();
         super.onPostExecute(result);
 
     }

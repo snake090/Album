@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Owner on 2016/11/08.
@@ -35,13 +36,15 @@ import java.util.List;
 
 public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
     private String words;
-    StringBuilder sb = new StringBuilder();
-    JSONArray jsonArray;
-    ArrayList<String> message;
+    private StringBuilder sb = new StringBuilder();
+    private JSONArray jsonArray;
+    private ArrayList<String> message;
+    private  CountDownLatch _latch;
 
-    public WordsAPI(String word) {
+    public WordsAPI(String word ,CountDownLatch _latch)  {
         super();
         words = word;
+        this._latch=_latch;
     }
 
 
@@ -121,5 +124,6 @@ public class WordsAPI extends AsyncTask<Void, Void, ArrayList<String>> {
 
         Related_Words_Insert related_words_insert = new Related_Words_Insert();
         related_words_insert.Insert_Keyword_Eng(result, words);
+        _latch.countDown();
     }
 }
