@@ -68,8 +68,7 @@ public class Album_Insert {
 
         r.commitTransaction();
         r.close();
-        Log.d("related_word",album.getKeywords().get(0).getRelated_wordses().get(0).getRelated_words());
-        Log.d("dbFinish","picture");
+        Log.d("db","picture");
 
 
     }

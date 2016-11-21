@@ -340,14 +340,14 @@ public class MainActivity extends AppCompatActivity
                 classification_Info_Eng_Insert.Insert_Classification_Info(result);
 
 
-                new TranslateEngToJap(result).execute();
+                new TranslateEngToJap(result).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 Picture_Query picture_query = new Picture_Query();
                 ArrayList<String> path = picture_query.Query();
 
                 grid(path);
             }
-        }.execute();
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private ArrayList<String> convertResponse(BatchAnnotateImagesResponse response) {

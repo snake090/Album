@@ -114,13 +114,13 @@ public class CloudVision_Landmark {
                     Picture_Insert picture_insert=new Picture_Insert();
                     picture_insert.Insert_Landmark_Eng(result.get(0));
                     Translate_landmark_EngToJap translate_landmark_engtojap=new Translate_landmark_EngToJap(result.get(0));
-                    translate_landmark_engtojap.execute();
+                    translate_landmark_engtojap.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 }
 
 
             }
-        }.execute();
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private ArrayList<String> convertResponse(BatchAnnotateImagesResponse response) {
