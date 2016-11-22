@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.owner.album.Insert.Album_Insert;
@@ -45,6 +46,9 @@ public class Album_Create_Activity extends AppCompatActivity
     EditText keyword2;
     EditText keyword3;
     Button create_album;
+    Spinner reserchCondition;
+    Spinner dateCondition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +71,9 @@ public class Album_Create_Activity extends AppCompatActivity
         keyword2=(EditText)findViewById(R.id.KeyWord2);
         keyword3=(EditText)findViewById(R.id.KeyWord3);
         date=(EditText)findViewById(R.id.Date);
+        reserchCondition=(Spinner)findViewById(R.id.Keyword_Condition);
+        dateCondition=(Spinner)findViewById(R.id.Date_Condtion);
         date.setOnClickListener(v->{
-
-
             // 現在の日付を取得
             final Calendar calendar = Calendar.getInstance();
             int year  = calendar.get(Calendar.YEAR);
@@ -93,6 +97,7 @@ public class Album_Create_Activity extends AppCompatActivity
 
         });
         create_album =(Button)findViewById(R.id.Create);
+
         create_album.setOnClickListener(v->{
             ArrayList<String> keywords=new ArrayList<String>();
             if(!"".equals(keyword1.getText().toString())){
@@ -106,14 +111,16 @@ public class Album_Create_Activity extends AppCompatActivity
             }
             String albumName=name.getText().toString();
             if(keywords.size()!=0&&albumName!=null) {
-                new ControlTask(keywords,albumName,1,date.getText().toString(),0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                int ResearchCondition=reserchCondition.getSelectedItemPosition();
+                int DateConditon=dateCondition.getSelectedItemPosition();
+                new ControlTask(keywords,albumName,ResearchCondition,date.getText().toString(),DateConditon,Album_Create_Activity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();
             }
 
-
         });
+
     }
 
     @Override

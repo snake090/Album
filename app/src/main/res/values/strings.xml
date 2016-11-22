@@ -14,7 +14,7 @@
     <string name="title_activity_album__create_">Album_Create_Activity</string>
 
     <string name="action_settings">Settings</string>
-    
+
     <string-array name="list">
         <item>Before</item>
         <item>That Day</item>
@@ -26,5 +26,9 @@
         <item>OR Search</item>
 
     </string-array>
+    <string name="title_activity_album_list_">AlbumList_Activity</string>
+
+    <string name="menu_remove">Remove</string>
+    <string name="content_open_popup">Open Popup Menu</string>
 
 </resources>

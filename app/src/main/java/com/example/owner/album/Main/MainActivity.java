@@ -1,5 +1,6 @@
 package com.example.owner.album.Main;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.owner.album.Album.AlbumList_Activity;
 import com.example.owner.album.Album.Album_Create_Activity;
 import com.example.owner.album.CloudVision.CloudVision_Landmark;
 import com.example.owner.album.Exif.Exif;
@@ -491,6 +493,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            Intent intent;
+            intent = new Intent(MainActivity.this, AlbumList_Activity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 

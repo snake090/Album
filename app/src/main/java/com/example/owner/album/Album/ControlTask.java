@@ -1,9 +1,12 @@
 package com.example.owner.album.Album;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.owner.album.Insert.Album_Insert;
+import com.example.owner.album.Main.MainActivity;
 import com.example.owner.album.model.Keyword;
 import com.example.owner.album.model.Related_Words;
 import com.example.owner.album.query.Keyword_Query;
@@ -26,15 +29,17 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     private int keyWordCondition;
     private String date;
     private int dateCondition;
+    private Activity mActivity;
 
 
-    public ControlTask(ArrayList<String> keywords, String albumName, int keyWordCondition, String date, int dateCondition) {
+    public ControlTask(ArrayList<String> keywords, String albumName, int keyWordCondition, String date, int dateCondition,Activity activity) {
         this.keywords = keywords;
         this.albumName = albumName;
         this.keyWordCondition = keyWordCondition;
         this.date = date;
         this.dateCondition = dateCondition;
         this._latch = new CountDownLatch(keywords.size() * 2);
+        mActivity=activity;
     }
 
     @Override
@@ -83,6 +88,7 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        // プログレス終了処理
+        Log.d("db","seni");
+        mActivity.startActivity(new Intent(mActivity, AlbumList_Activity.class));
     }
 }
