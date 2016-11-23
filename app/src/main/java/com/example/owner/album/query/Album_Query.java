@@ -36,6 +36,26 @@ public class Album_Query {
         return results;
     }
 
+    public ArrayList<String>Get_AlbumName(){
+        Realm r = Realm.getDefaultInstance();
+        RealmResults<Album> alba = r.where(Album.class).findAll();
+        ArrayList<String> member=new ArrayList<>();
+        for(Album album:alba){
+            member.add(album.getAlbum_name());
+        }
+        r.close();
+        return member;
+    }
+    public ArrayList<String>Get_Path(int id){
+        Realm r = Realm.getDefaultInstance();
+        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id",id).findAll();
+        ArrayList<String> path=new ArrayList<>();
+        for(Picture_Info pictureInfo:alba.get(0).getPicture_infos()){
+            path.add(pictureInfo.getPath());
+        }
+        return path;
+    }
+
     public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, int dateCondition) {
 
         RealmList<Picture_Info> picture_infos = new RealmList<>();

@@ -49,4 +49,7 @@ public class Album extends RealmObject{
         return picture_infos;
     }
 
+    public String getAlbum_name() {
+        return album_name;
+    }
 }

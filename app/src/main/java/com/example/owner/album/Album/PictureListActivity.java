@@ -1,12 +1,9 @@
 package com.example.owner.album.Album;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,55 +13,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.owner.album.R;
-import com.example.owner.album.model.Album;
 import com.example.owner.album.query.Album_Query;
 
 import java.util.ArrayList;
 
-import io.realm.RealmResults;
-
-public class AlbumList_Activity extends AppCompatActivity
+public class PictureListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ListView listView;
-    String[] members = {"mhidaka", "rongon_xp", "kacchi0516", "kobashinG",
-            "seit", "kei_i_t", "furusin_oriver"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_album_list_);
-        listView = (ListView) findViewById(R.id.listview);
-
-
-        ArrayList<String> member = new Album_Query().Get_AlbumName();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1, member);
-        listView.setAdapter(adapter);
-
-        registerForContextMenu(listView);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(AlbumList_Activity.this, PictureListActivity.class);
-                intent.putExtra("id", position);
-                startActivity(intent);
-            }
-        });
+        setContentView(R.layout.activity_picture_list);
+        Intent i = getIntent();
+        int id=i.getIntExtra("id",-1);
+        ArrayList<String> path;
+        if(id!=-1){
+            path=new Album_Query().Get_Path(id);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,7 +46,6 @@ public class AlbumList_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -90,7 +60,7 @@ public class AlbumList_Activity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.album_list_, menu);
+        getMenuInflater().inflate(R.menu.picture_list, menu);
         return true;
     }
 
@@ -133,36 +103,4 @@ public class AlbumList_Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        switch (v.getId()) {
-            case R.id.listview:
-
-                getMenuInflater().inflate(R.menu.popup, menu);
-                break;
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete:
-                /*ポジション取得方法
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                String[] a = getBaseContext().getResources().getStringArray(R.array.planets_array);
-                String s = a[info.position];
-                */
-
-                Toast.makeText(getBaseContext(), " - Delete", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.map:
-                Toast.makeText(getBaseContext(), " - Map", Toast.LENGTH_SHORT).show();
-                return true;
-        }
-        return false;
-    }
-
-
 }
