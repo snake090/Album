@@ -1,4 +1,4 @@
-package com.example.owner.album.Main;
+package com.example.owner.album.Component;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;

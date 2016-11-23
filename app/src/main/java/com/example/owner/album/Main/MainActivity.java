@@ -1,12 +1,10 @@
 package com.example.owner.album.Main;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,12 +25,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.example.owner.album.Album.AlbumList_Activity;
 import com.example.owner.album.Album.Album_Create_Activity;
 import com.example.owner.album.CloudVision.CloudVision_Landmark;
-import com.example.owner.album.Exif.Exif;
+import com.example.owner.album.Component.Exif;
+import com.example.owner.album.Component.GalleryAdapter;
+import com.example.owner.album.Component.Orientation;
 import com.example.owner.album.ImageShow.FullscreenActivity;
 import com.example.owner.album.ImageShow.MyApplication;
 import com.example.owner.album.Insert.Classification_Info_Eng_Insert;
@@ -58,7 +57,6 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

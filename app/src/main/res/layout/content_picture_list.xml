@@ -13,4 +13,25 @@
     tools:context="com.example.owner.album.Album.PictureListActivity"
     tools:showIn="@layout/app_bar_picture_list">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:columnWidth="100dp"
+            android:minHeight="0dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="8dp"
+            android:horizontalSpacing="8dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+
+            android:id="@+id/grid" />
+    </LinearLayout>
+
 </RelativeLayout>

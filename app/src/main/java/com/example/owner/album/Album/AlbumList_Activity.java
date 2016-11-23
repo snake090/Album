@@ -37,8 +37,6 @@ import io.realm.RealmResults;
 public class AlbumList_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ListView listView;
-    String[] members = {"mhidaka", "rongon_xp", "kacchi0516", "kobashinG",
-            "seit", "kei_i_t", "furusin_oriver"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,7 @@ public class AlbumList_Activity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(AlbumList_Activity.this, PictureListActivity.class);
-                intent.putExtra("id", position);
+                intent.putExtra("id", position+1);
                 startActivity(intent);
             }
         });

@@ -110,7 +110,7 @@ public class Album_Create_Activity extends AppCompatActivity
                 keywords.add(keyword3.getText().toString());
             }
             String albumName=name.getText().toString();
-            if(keywords.size()!=0&&albumName!=null) {
+            if(keywords.size()!=0&&!"".equals(albumName)){
                 int ResearchCondition=reserchCondition.getSelectedItemPosition();
                 int DateConditon=dateCondition.getSelectedItemPosition();
                 new ControlTask(keywords,albumName,ResearchCondition,date.getText().toString(),DateConditon,Album_Create_Activity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

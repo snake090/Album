@@ -1,4 +1,4 @@
-package com.example.owner.album.Exif;
+package com.example.owner.album.Component;
 
 /**
  * Created by Owner on 2016/10/18.

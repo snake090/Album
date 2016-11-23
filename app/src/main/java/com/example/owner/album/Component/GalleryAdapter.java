@@ -1,4 +1,4 @@
-package com.example.owner.album.Main;
+package com.example.owner.album.Component;
 
 /**
  * Created by Owner on 2016/10/21.
