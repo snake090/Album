@@ -44,9 +44,12 @@ public class Picture_Insert {
             }
             pictureInfo1.setLongitude(longitude);
             pictureInfo1.setLatitude(latitude);
-            Get_Address get_address=new Get_Address();
-            String adress=get_address.getAddress(context,longitude,latitude);
-            pictureInfo1.setAddress(adress);
+            if (longitude != null && latitude != null) {
+                Get_Address get_address = new Get_Address();
+                String adress = get_address.getAddress(context, longitude, latitude);
+
+                pictureInfo1.setAddress(adress);
+            }
 
         } else {
             realmList = realmList.sort("id", Sort.DESCENDING);
@@ -62,15 +65,17 @@ public class Picture_Insert {
             }
             pictureInfo1.setLongitude(longitude);
             pictureInfo1.setLatitude(latitude);
-            Get_Address get_address=new Get_Address();
-            String adress=get_address.getAddress(context,longitude,latitude);
-            pictureInfo1.setAddress(adress);
+            if (longitude != null && latitude != null) {
+                Get_Address get_address = new Get_Address();
+                String adress = get_address.getAddress(context, longitude, latitude);
+                pictureInfo1.setAddress(adress);
+            }
         }
         r.commitTransaction();
         r.close();
     }
 
-    public void Insert_Landmark_Eng(String landmark){
+    public void Insert_Landmark_Eng(String landmark) {
         Realm r = Realm.getDefaultInstance();
         r.beginTransaction();
 
@@ -84,7 +89,8 @@ public class Picture_Insert {
         r.commitTransaction();
         r.close();
     }
-    public void Insert_Landmark_Jap(String landmark){
+
+    public void Insert_Landmark_Jap(String landmark) {
         Realm r = Realm.getDefaultInstance();
         r.beginTransaction();
 
