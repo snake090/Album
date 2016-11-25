@@ -31,5 +31,6 @@
     <string name="menu_remove">Remove</string>
     <string name="content_open_popup">Open Popup Menu</string>
     <string name="title_activity_picture_list">PictureListActivity</string>
+    <string name="title_activity_album_maps">Map</string>
 
 </resources>

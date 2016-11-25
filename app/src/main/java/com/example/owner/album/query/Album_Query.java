@@ -98,6 +98,7 @@ public class Album_Query {
                         addList(RealmResults1, picture_infos);
                     }
                 }
+                OverlapRemove(picture_infos);
                 //日付あり
             } else {
                 //before
@@ -112,6 +113,7 @@ public class Album_Query {
                             addList(RealmResults1, picture_infos);
                         }
                     }
+                    OverlapRemove(picture_infos);
                     //その日
                 } else if (dateCondition == 1) {
                     RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date);
@@ -125,6 +127,7 @@ public class Album_Query {
                         }
 
                     }
+                    OverlapRemove(picture_infos);
                     //after
                 } else if (dateCondition == 2) {
                     RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateAfter(album, date);
@@ -137,6 +140,7 @@ public class Album_Query {
                             addList(RealmResults1, picture_infos);
                         }
                     }
+                    OverlapRemove(picture_infos);
                 }
             }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,6 +165,7 @@ public class Album_Query {
                                 addList(RealmResults1, picture_infos);
                             }
                         }
+                        OverlapRemove(picture_infos);
                     }
                     //関連語
                     for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
@@ -179,6 +184,7 @@ public class Album_Query {
                                 }
                             }
                         }
+                        OverlapRemove(picture_infos);
                     }
                     //日付あり
                 } else {
