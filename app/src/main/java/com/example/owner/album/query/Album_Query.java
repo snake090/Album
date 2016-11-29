@@ -61,6 +61,11 @@ public class Album_Query {
         String name=alba.get(0).getAlbum_name();
         return name;
     }
+    public RealmResults<Album>Get_Album(int id){
+        Realm r = Realm.getDefaultInstance();
+        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id",id).findAll();
+        return alba;
+    }
 
 
     public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, int dateCondition) {

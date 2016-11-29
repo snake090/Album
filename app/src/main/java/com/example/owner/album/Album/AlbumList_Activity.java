@@ -26,6 +26,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.album.Map.AlbumMapsActivity;
 import com.example.owner.album.R;
 import com.example.owner.album.model.Album;
 import com.example.owner.album.query.Album_Query;
@@ -156,7 +157,10 @@ public class AlbumList_Activity extends AppCompatActivity
                 Toast.makeText(getBaseContext(), " - Delete", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.map:
-                Toast.makeText(getBaseContext(), " - Map", Toast.LENGTH_SHORT).show();
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                Intent intent = new Intent(AlbumList_Activity.this, AlbumMapsActivity.class);
+                intent.putExtra("id", info.position+1);
+                startActivity(intent);
                 return true;
         }
         return false;

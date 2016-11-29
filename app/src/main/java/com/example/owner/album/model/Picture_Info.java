@@ -70,6 +70,18 @@ public class Picture_Info extends RealmObject {
         return path;
     }
 
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String getLandmark_jap() {
+        return landmark_jap;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
