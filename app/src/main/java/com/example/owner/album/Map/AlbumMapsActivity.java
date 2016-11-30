@@ -21,6 +21,7 @@ import com.example.owner.album.R;
 import com.example.owner.album.model.Album;
 import com.example.owner.album.model.Picture_Info;
 import com.example.owner.album.query.Album_Query;
+import com.example.owner.album.query.Picture_Query;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -57,28 +60,78 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
         app = (MyApplication) this.getApplication();
         Intent i = getIntent();
         int id = i.getIntExtra("id", -1);
+        int kind = i.getIntExtra("kind", -1);
         if (id != -1) {
-            RealmResults<Album> album = new Album_Query().Get_Album(id);
-            latitude = new ArrayList<>();
-            longitude = new ArrayList<>();
-            landmark=new ArrayList<>();
-            ArrayList<String> path;
-            for (Picture_Info pictureInfo : album.get(0).getPicture_infos()) {
-                String Longitude=pictureInfo.getLongitude();
-                String Latitude=pictureInfo.getLatitude();
-                if(!"".equals(longitude)&&!"".equals(latitude)) {
-                    longitude.add(Double.parseDouble(Longitude));
-                    latitude.add(Double.parseDouble(Latitude));
-                    String Landmark=pictureInfo.getLandmark_jap();
-                    if(!"".equals(Landmark)){
-                        landmark.add(Landmark);
-                    }else{
-                        landmark.add("");
+            if (kind == 0) {
+                RealmResults<Album> album = new Album_Query().Get_Album(id);
+                latitude = new ArrayList<>();
+                longitude = new ArrayList<>();
+                landmark = new ArrayList<>();
+                ArrayList<String> path=new ArrayList<>();
+                for (Picture_Info pictureInfo : album.get(0).getPicture_infos()) {
+                    String Longitude = pictureInfo.getLongitude();
+                    String Latitude = pictureInfo.getLatitude();
+                    if (Latitude!=null && Longitude!=null) {
+                        longitude.add(Double.parseDouble(Longitude));
+                        latitude.add(Double.parseDouble(Latitude));
+                        String Landmark = pictureInfo.getLandmark_jap();
+                        if (!"".equals(Landmark)) {
+                            landmark.add(Landmark);
+                        } else {
+                            landmark.add("");
+                        }
+                        path.add(pictureInfo.getPath());
                     }
                 }
-                path = new Album_Query().Get_Path(id);
+                GetBitmap(path);
+            } else {
+                latitude = new ArrayList<>();
+                longitude = new ArrayList<>();
+                landmark = new ArrayList<>();
+                ArrayList<String> path = new ArrayList<>();
+                ArrayList<String> youso;
+                youso = new Picture_Query().Get_Picture_Info(id);
+                String Latitude = youso.get(0);
+                String Longitude = youso.get(1);
+                if (Latitude!=null && Longitude!=null) {
+                    latitude.add(Double.parseDouble(Latitude));
+                    longitude.add(Double.parseDouble(Longitude));
+                    String Landmark = youso.get(2);
+                    if (!"".equals(Landmark)) {
+                        landmark.add(Landmark);
+                    } else {
+                        landmark.add("");
+                    }
+                    path.add(youso.get(3));
+                }
                 GetBitmap(path);
             }
+        } else {
+            Realm r = Realm.getDefaultInstance();
+            latitude = new ArrayList<>();
+            longitude = new ArrayList<>();
+            landmark = new ArrayList<>();
+            ArrayList<String> path = new ArrayList<>();
+            RealmResults<Picture_Info> picture_infos = new Picture_Query().Id_Query();
+            RealmList<Picture_Info> picture_infos1 = new RealmList<>();
+            picture_infos1.addAll(picture_infos.subList(0, picture_infos.size()));
+            for (Picture_Info pictureInfo : picture_infos1) {
+                String Latitude = pictureInfo.getLatitude();
+                String Longitude = pictureInfo.getLongitude();
+                if (Latitude!=null && Longitude!=null) {
+                    longitude.add(Double.parseDouble(Longitude));
+                    latitude.add(Double.parseDouble(Latitude));
+                    String Landmark = pictureInfo.getLandmark_jap();
+                    if (!"".equals(Landmark)) {
+                        landmark.add(Landmark);
+                    } else {
+                        landmark.add("");
+                    }
+                    path.add(pictureInfo.getPath());
+                }
+            }
+            r.close();
+            GetBitmap(path);
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -107,7 +160,7 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                 View view = getLayoutInflater().inflate(R.layout.info_window, null);
                 // タイトル設定
-                TextView title = (TextView)view.findViewById(R.id.info_title);
+                TextView title = (TextView) view.findViewById(R.id.info_title);
                 title.setText(marker.getTitle());
                 // 画像設定
                 ImageView imageview = (ImageView) view.findViewById(R.id.imageView3);
@@ -127,8 +180,8 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
-                id=id.replaceAll("m","");
-                index=Integer.parseInt(id);
+                id = id.replaceAll("m", "");
+                index = Integer.parseInt(id);
                 LatLng location = new LatLng(latitude.get(index), longitude.get(index));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17));
                 return false;
@@ -136,10 +189,10 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
         });
 
 
-        if(longitude.size()==1){
+        if (longitude.size() == 1) {
             LatLng location = new LatLng(latitude.get(index), longitude.get(index));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17));
-        }else {
+        } else {
             LatLngBounds JAPAN = new LatLngBounds(
                     new LatLng(20, 122), new LatLng(45, 153));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(JAPAN.getCenter(), 4));
@@ -148,8 +201,8 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             LatLng location = new LatLng(latitude.get(i), longitude.get(i));
             MarkerOptions options = new MarkerOptions();
             options.position(location);
-            String Landmark=landmark.get(i);
-            if(!"".equals(Landmark)) {
+            String Landmark = landmark.get(i);
+            if (!"".equals(Landmark)) {
                 options.title(Landmark);
             }
             Marker marker = mMap.addMarker(options);
@@ -161,7 +214,7 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             public void onInfoWindowClick(Marker marker) {
                 Intent intent;
                 String id = marker.getId();
-                id=id.replaceAll("m","");
+                id = id.replaceAll("m", "");
                 intent = new Intent(AlbumMapsActivity.this, FullscreenActivity.class);
                 app.setBitmaps(bitmap_path);
                 app.setPosition(Integer.parseInt(id));

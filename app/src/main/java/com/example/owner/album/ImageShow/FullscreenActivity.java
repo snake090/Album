@@ -2,6 +2,7 @@ package com.example.owner.album.ImageShow;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,10 +11,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.owner.album.Album.AlbumList_Activity;
 import com.example.owner.album.Component.Orientation;
+import com.example.owner.album.Map.AlbumMapsActivity;
 import com.example.owner.album.R;
+import com.example.owner.album.query.Picture_Query;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,9 +57,10 @@ public class FullscreenActivity extends Activity {
     private ArrayList<String> bitmaps;
     private int position;
     float lastTouchX = 0;
-   // float lastTouchY = 0;
+    // float lastTouchY = 0;
     float currentX = 0;
     //float currentY = 0;
+    private Button button;
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -112,9 +119,9 @@ public class FullscreenActivity extends Activity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-
+        button = (Button) findViewById(R.id.dummy_button);
         application = (MyApplication) this.getApplication();
-       bitmaps = application.getBitmaps();
+        bitmaps = application.getBitmaps();
         position = application.getPosition();
         Image_show();
 
@@ -130,13 +137,24 @@ public class FullscreenActivity extends Activity {
             }
         });
 
-
-
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        button.setOnClickListener(v -> {
+
+            String Bitmap_path=bitmaps.get(position);
+            Intent intent = new Intent(FullscreenActivity.this, AlbumMapsActivity.class);
+            int id=new Picture_Query().Get_ID(Bitmap_path);
+            intent.putExtra("id", id);
+            intent.putExtra("kind",1);
+            startActivity(intent);
+
+        });
+
     }
+
     private class FlickTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -145,12 +163,12 @@ public class FullscreenActivity extends Activity {
                 case MotionEvent.ACTION_DOWN://画面に触れたら
                     lastTouchX = event.getX();
 
-                   // lastTouchY = event.getY();
+                    // lastTouchY = event.getY();
                     break;
 
                 case MotionEvent.ACTION_UP://画面を離したら
                     currentX = event.getX();
-                   // currentY = event.getY();
+                    // currentY = event.getY();
                     /*
                     AlertDialog.Builder alertDlgBld = new AlertDialog.Builder(FullscreenActivity.this);
                     alertDlgBld.setMessage("(" + lastTouchX +")から(" + currentX +  ")へフリックした");
@@ -165,22 +183,22 @@ public class FullscreenActivity extends Activity {
 
                     alertDlgBld.show();
                     */
-                    float distance=currentX-lastTouchX;
+                    float distance = currentX - lastTouchX;
 
                     //右
-                    if((distance>0)&&(Math.abs(distance)>100)){
-                        if(position-1>=0){
+                    if ((distance > 0) && (Math.abs(distance) > 100)) {
+                        if (position - 1 >= 0) {
                             position--;
                             Image_show();
                         }
-                    //左
-                    }else if((distance<0)&&(Math.abs(distance))>100){
-                        if(position+1<bitmaps.size()){
+                        //左
+                    } else if ((distance < 0) && (Math.abs(distance)) > 100) {
+                        if (position + 1 < bitmaps.size()) {
                             position++;
                             Image_show();
                         }
 
-                }
+                    }
                     break;
             }
             return true;
@@ -256,24 +274,23 @@ public class FullscreenActivity extends Activity {
 
     }
 
-    private void Image_show(){
-        ImageUtils imageUtils=new ImageUtils();
-        Orientation orientation=new Orientation();
-        Bitmap bitmap=BitmapFactory.decodeFile(bitmaps.get(position));
-        ExifInterface exifInterface=null;
-        Orientation orientation_class=new Orientation();
+    private void Image_show() {
+        ImageUtils imageUtils = new ImageUtils();
+        Orientation orientation = new Orientation();
+        Bitmap bitmap = BitmapFactory.decodeFile(bitmaps.get(position));
+        ExifInterface exifInterface = null;
+        Orientation orientation_class = new Orientation();
         try {
             exifInterface = new ExifInterface(bitmaps.get(position));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         int orientation1 = exifInterface.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED);
 
-        imageView2.setImageBitmap(imageUtils.resizeBitmapToDisplaySize(this,orientation.orientation(bitmap,orientation1)));
+        imageView2.setImageBitmap(imageUtils.resizeBitmapToDisplaySize(this, orientation.orientation(bitmap, orientation1)));
     }
-
 
 
 }

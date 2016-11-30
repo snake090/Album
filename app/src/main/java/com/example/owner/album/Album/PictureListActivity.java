@@ -24,6 +24,7 @@ import com.example.owner.album.Component.Orientation;
 import com.example.owner.album.ImageShow.FullscreenActivity;
 import com.example.owner.album.ImageShow.MyApplication;
 import com.example.owner.album.Main.MainActivity;
+import com.example.owner.album.Map.AlbumMapsActivity;
 import com.example.owner.album.R;
 import com.example.owner.album.query.Album_Query;
 
@@ -39,6 +40,7 @@ public class PictureListActivity extends AppCompatActivity
     private ArrayList<String> bitmap_path;
     private GalleryAdapter galleryAdapter;
     private MyApplication app;
+    private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +49,7 @@ public class PictureListActivity extends AppCompatActivity
         gridView=(GridView)findViewById(R.id.grid);
         app = (MyApplication) this.getApplication();
         Intent i = getIntent();
-        int id=i.getIntExtra("id",-1);
+        id=i.getIntExtra("id",-1);
         ArrayList<String> path;
         if(id!=-1){
             path=new Album_Query().Get_Path(id);
@@ -127,19 +129,24 @@ public class PictureListActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        int Id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (Id == R.id.nav_gallery) {
+            Intent intent;
+            intent = new Intent(PictureListActivity.this, MainActivity.class);
+            startActivity(intent);
+        } else if (Id == R.id.nav_album) {
+            Intent intent;
+            intent = new Intent(PictureListActivity.this, AlbumList_Activity.class);
+            startActivity(intent);
+        } else if (Id == R.id.nav_map) {
+            Intent intent = new Intent(PictureListActivity.this, AlbumMapsActivity.class);
+            intent.putExtra("id", id);
+            intent.putExtra("kind",0);
+            startActivity(intent);
+        } else if (Id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (Id == R.id.nav_send) {
 
         }
 

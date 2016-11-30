@@ -160,6 +160,7 @@ public class AlbumList_Activity extends AppCompatActivity
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 Intent intent = new Intent(AlbumList_Activity.this, AlbumMapsActivity.class);
                 intent.putExtra("id", info.position+1);
+                intent.putExtra("kind",0);
                 startActivity(intent);
                 return true;
         }

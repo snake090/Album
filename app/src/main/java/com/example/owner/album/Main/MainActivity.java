@@ -36,6 +36,7 @@ import com.example.owner.album.ImageShow.FullscreenActivity;
 import com.example.owner.album.ImageShow.MyApplication;
 import com.example.owner.album.Insert.Classification_Info_Eng_Insert;
 import com.example.owner.album.Insert.Picture_Insert;
+import com.example.owner.album.Map.AlbumMapsActivity;
 import com.example.owner.album.R;
 import com.example.owner.album.Translate.TranslateEngToJap;
 import com.example.owner.album.query.Picture_Query;
@@ -493,17 +494,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_album) {
             Intent intent;
             intent = new Intent(MainActivity.this, AlbumList_Activity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_map) {
+            Intent intent = new Intent(MainActivity.this, AlbumMapsActivity.class);
+            intent.putExtra("id", -1);
+            intent.putExtra("kind",-1);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
