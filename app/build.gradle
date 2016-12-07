@@ -36,9 +36,7 @@ repositories {
     maven {
         url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
     }
-    maven {
-        url 'https://raw.github.com/zeeshanejaz/unirest-android/mvn-repo'
-    }
+
 
 
 }
@@ -51,7 +49,6 @@ dependencies {
     compile 'com.google.api-client:google-api-client-android:1.20.0' exclude module: 'httpclient'
     compile 'com.google.http-client:google-http-client-gson:1.20.0' exclude module: 'httpclient'
     compile files('libs/microsoft-translator-java-api-0.6.2-jar-with-dependencies.jar')
-    compile files('libs/unirest-java-1.4.9.jar')
 
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
@@ -61,8 +58,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
-    compile 'org.json:json:20160212'
-    compile 'org.apache.httpcomponents:httpclient:4.3.6'
     compile 'com.google.android.gms:play-services:9.6.1'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'

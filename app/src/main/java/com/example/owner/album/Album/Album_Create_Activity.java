@@ -19,15 +19,7 @@ import android.widget.Toast;
 
 import com.example.owner.album.Insert.Album_Insert;
 import com.example.owner.album.R;
-import com.example.owner.album.model.Album;
-import com.example.owner.album.model.Keyword;
-import com.example.owner.album.model.Related_Words;
-import com.example.owner.album.query.Album_Query;
-import com.example.owner.album.query.Keyword_Query;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -8,10 +8,7 @@ import com.example.owner.album.Insert.Picture_Insert;
 import com.example.owner.album.Insert.Related_Words_Insert;
 import com.example.owner.album.Translate.Translate_landmark_EngToJap;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+
 
 
 import org.json.JSONArray;
