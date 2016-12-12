@@ -37,9 +37,9 @@ public class Album_Create_Activity extends AppCompatActivity
     EditText keyword1;
     EditText keyword2;
     EditText keyword3;
+    EditText date1;
     Button create_album;
     Spinner reserchCondition;
-    Spinner dateCondition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +63,9 @@ public class Album_Create_Activity extends AppCompatActivity
         keyword2=(EditText)findViewById(R.id.KeyWord2);
         keyword3=(EditText)findViewById(R.id.KeyWord3);
         date=(EditText)findViewById(R.id.Date);
+        date1=(EditText)findViewById(R.id.Date1);
         reserchCondition=(Spinner)findViewById(R.id.Keyword_Condition);
-        dateCondition=(Spinner)findViewById(R.id.Date_Condtion);
+
         date.setOnClickListener(v->{
             // 現在の日付を取得
             final Calendar calendar = Calendar.getInstance();
@@ -88,6 +89,28 @@ public class Album_Create_Activity extends AppCompatActivity
             datePicker.show();
 
         });
+        date1.setOnClickListener(v->{
+            // 現在の日付を取得
+            final Calendar calendar = Calendar.getInstance();
+            int year  = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day   = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // 日付選択ダイアログの生成
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    this,
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        public void onDateSet(DatePicker view,
+                                              int year, int monthOfYear, int dayOfMonth) {
+                            date1.setText(String.valueOf(year)+"/"+String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth));
+                        }
+                    },
+                    year, month, day);
+
+            // 表示
+            datePicker.show();
+        });
         create_album =(Button)findViewById(R.id.Create);
 
         create_album.setOnClickListener(v->{
@@ -104,8 +127,8 @@ public class Album_Create_Activity extends AppCompatActivity
             String albumName=name.getText().toString();
             if(keywords.size()!=0&&!"".equals(albumName)){
                 int ResearchCondition=reserchCondition.getSelectedItemPosition();
-                int DateConditon=dateCondition.getSelectedItemPosition();
-                new ControlTask(keywords,albumName,ResearchCondition,date.getText().toString(),DateConditon,Album_Create_Activity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                int DateConditon=Get_datecondition(date.getText().toString(),date1.getText().toString());
+                new ControlTask(keywords,albumName,ResearchCondition,date.getText().toString(),date1.getText().toString(),DateConditon,Album_Create_Activity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();
@@ -171,5 +194,17 @@ public class Album_Create_Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private int Get_datecondition(String Date,String Date1){
+        if(!"".equals(Date)&&"".equals(Date1)){
+            return 2;
+        }else if (!"".equals(Date)&&!"".equals(Date1)){
+            return 1;
+        }else {
+            return 0;
+        }
+
+    }
+
 
 }

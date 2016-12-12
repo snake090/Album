@@ -36,52 +36,73 @@ public class Album_Query {
         return results;
     }
 
-    public ArrayList<String>Get_AlbumName(){
+    public ArrayList<String> Get_AlbumName() {
         Realm r = Realm.getDefaultInstance();
         RealmResults<Album> alba = r.where(Album.class).findAll();
-        ArrayList<String> member=new ArrayList<>();
-        for(Album album:alba){
+        ArrayList<String> member = new ArrayList<>();
+        for (Album album : alba) {
             member.add(album.getAlbum_name());
         }
         r.close();
         return member;
     }
-    public ArrayList<String>Get_Path(int id){
+
+    public ArrayList<String> Get_Path(int id) {
         Realm r = Realm.getDefaultInstance();
-        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id",id).findAll();
-        ArrayList<String> path=new ArrayList<>();
-        for(Picture_Info pictureInfo:alba.get(0).getPicture_infos()){
+        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id", id).findAll();
+        ArrayList<String> path = new ArrayList<>();
+        for (Picture_Info pictureInfo : alba.get(0).getPicture_infos()) {
             path.add(pictureInfo.getPath());
         }
         return path;
     }
-    public String Get_AlbumName(int id){
+
+    public String Get_AlbumName(int id) {
         Realm r = Realm.getDefaultInstance();
-        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id",id).findAll();
-        String name=alba.get(0).getAlbum_name();
+        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id", id).findAll();
+        String name = alba.get(0).getAlbum_name();
         return name;
     }
-    public RealmResults<Album>Get_Album(int id){
+
+    public RealmResults<Album> Get_Album(int id) {
         Realm r = Realm.getDefaultInstance();
-        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id",id).findAll();
+        RealmResults<Album> alba = r.where(Album.class).equalTo("album_id", id).findAll();
         return alba;
     }
 
 
-    public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, int dateCondition) {
+    public RealmList<Picture_Info> Relation_Album(Album album, int keyWordCondition, String dateTime, String dateTime1, int dateCondition) {
 
         RealmList<Picture_Info> picture_infos = new RealmList<>();
         java.util.Date date = null;
+        java.util.Date date1 = null;
         if ("".equals(dateTime)) {
             System.out.print("");
         } else {
             dateTime = dateTime.replaceAll("/", ":");
             dateTime = dateTime + " 00:00:00";
 
+
             DateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
 
             try {
                 date = format.parse(dateTime);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if ("".equals(dateTime1)) {
+            System.out.print("");
+        } else {
+
+            dateTime1 = dateTime.replaceAll("/", ":");
+            dateTime1 = dateTime1 + " 00:00:00";
+
+            DateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
+
+            try {
+                date1 = format.parse(dateTime1);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,12 +142,12 @@ public class Album_Query {
                     OverlapRemove(picture_infos);
                     //その日
                 } else if (dateCondition == 1) {
-                    RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date);
+                    RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date, date1);
                     if (RealmResults.size() != 0) {
                         addList(RealmResults, picture_infos);
                     }
                     for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
-                        RealmResults<Picture_Info> RealmResults1 = getRealmResultRelatedWordThatDay(related_words, date);
+                        RealmResults<Picture_Info> RealmResults1 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                         if (RealmResults1.size() != 0) {
                             addList(RealmResults1, picture_infos);
                         }
@@ -232,7 +253,7 @@ public class Album_Query {
                     }//その日
                     else if (dateCondition == 1) {
                         //キーワード
-                        RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date);
+                        RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date, date1);
                         if (RealmResults.size() != 0) {
                             //キーワードとキーワード
                             RealmResults<Picture_Info> realmResults = getRealmResultKeywordANDKeyword(RealmResults, keywordRealmList, 1);
@@ -304,7 +325,7 @@ public class Album_Query {
                     }
                 }
                 //OR検索
-            } else if(keyWordCondition==1) {
+            } else if (keyWordCondition == 1) {
                 //日付無
                 if ("".equals(dateTime)) {
                     //キーワード
@@ -364,13 +385,13 @@ public class Album_Query {
                             addList(RealmResults1, picture_infos);
                         }
                         for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
-                            RealmResults<Picture_Info> RealmResults2 = getRealmResultRelatedWordThatDay(related_words, date);
+                            RealmResults<Picture_Info> RealmResults2 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                             if (RealmResults2.size() != 0) {
                                 addList(RealmResults2, picture_infos);
                             }
                         }
                         for (Related_Words related_words : keywordRealmList.get(1).getRelated_wordses()) {
-                            RealmResults<Picture_Info> RealmResults3 = getRealmResultRelatedWordThatDay(related_words, date);
+                            RealmResults<Picture_Info> RealmResults3 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                             if (RealmResults3.size() != 0) {
                                 addList(RealmResults3, picture_infos);
                             }
@@ -571,7 +592,7 @@ public class Album_Query {
                         //thatday
                     } else if (dateCondition == 1) {
                         //キーワード
-                        RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date);
+                        RealmResults<Picture_Info> RealmResults = getRealmResultKeywordDateThatDay(album, date, date1);
                         if (RealmResults.size() != 0) {
                             //キーワードとキーワード
                             RealmResults<Picture_Info> realmResults = getRealmResultKeywordANDKeyword(RealmResults, keywordRealmList, 1);
@@ -610,7 +631,7 @@ public class Album_Query {
                         }
                         //関連語
                         for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
-                            RealmResults<Picture_Info> RealmResults1 = getRealmResultRelatedWordThatDay(related_words, date);
+                            RealmResults<Picture_Info> RealmResults1 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                             //関連語とキーワード
                             if (RealmResults1.size() != 0) {
                                 RealmResults<Picture_Info> realmResults = getRealmResultRelatedwordANDKeyword(RealmResults1, keywordRealmList, 1);
@@ -815,19 +836,19 @@ public class Album_Query {
                             addList(RealmResults5, picture_infos);
                         }
                         for (Related_Words related_words : keywordRealmList.get(0).getRelated_wordses()) {
-                            RealmResults<Picture_Info> RealmResults2 = getRealmResultRelatedWordThatDay(related_words, date);
+                            RealmResults<Picture_Info> RealmResults2 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                             if (RealmResults2.size() != 0) {
                                 addList(RealmResults2, picture_infos);
                             }
                         }
                         for (Related_Words related_words : keywordRealmList.get(1).getRelated_wordses()) {
-                            RealmResults<Picture_Info> RealmResults3 = getRealmResultRelatedWordThatDay(related_words, date);
+                            RealmResults<Picture_Info> RealmResults3 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                             if (RealmResults3.size() != 0) {
                                 addList(RealmResults3, picture_infos);
                             }
                         }
                         for (Related_Words related_words : keywordRealmList.get(2).getRelated_wordses()) {
-                            RealmResults<Picture_Info> RealmResults4 = getRealmResultRelatedWordThatDay(related_words, date);
+                            RealmResults<Picture_Info> RealmResults4 = getRealmResultRelatedWordThatDay(related_words, date, date1);
                             if (RealmResults4.size() != 0) {
                                 addList(RealmResults4, picture_infos);
                             }
@@ -871,8 +892,8 @@ public class Album_Query {
             }
             System.out.print("");
         }
-            return picture_infos;
-        }
+        return picture_infos;
+    }
 
 
     private void OverlapRemove(RealmList<Picture_Info> picture_infos) {
@@ -943,23 +964,23 @@ public class Album_Query {
     }
 
     private RealmResults<Picture_Info> getRealmResultKeywordDateThatDay(Album
-                                                                                album, Date date) {
+                                                                                album, Date date, Date date1) {
         Realm r = Realm.getDefaultInstance();
         RealmList<Keyword> keywordRealmList = album.getKeywords();
         RealmResults<Picture_Info> RealmResults = r.where(Picture_Info.class).equalTo("classification_info_engs.name", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE).or()
                 .contains("address", keywordRealmList.get(0).getKeyword_Jap(), Case.INSENSITIVE).or()
                 .equalTo("landmark_eng", keywordRealmList.get(0).getKeyword_Eng(), Case.INSENSITIVE)
-                .equalTo("date", date).findAll();
+                .between("date", date, date1).findAll();
         return RealmResults;
     }
 
     private RealmResults<Picture_Info> getRealmResultRelatedWordThatDay(Related_Words
-                                                                                related_words, Date date) {
+                                                                                related_words, Date date, Date date1) {
         Realm r = Realm.getDefaultInstance();
         RealmResults<Picture_Info> RealmResults1 = r.where(Picture_Info.class).equalTo("classification_info_engs.name", related_words.getRelated_words(), Case.INSENSITIVE).or()
                 .contains("address", related_words.getRelated_words(), Case.INSENSITIVE).or()
                 .equalTo("landmark_eng", related_words.getRelated_words(), Case.INSENSITIVE)
-                .equalTo("date", date).findAll();
+                .between("date", date, date1).findAll();
         return RealmResults1;
     }
 

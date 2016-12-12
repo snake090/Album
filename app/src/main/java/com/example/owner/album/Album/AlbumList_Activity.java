@@ -33,6 +33,7 @@ import com.example.owner.album.query.Album_Query;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class AlbumList_Activity extends AppCompatActivity
@@ -57,7 +58,7 @@ public class AlbumList_Activity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(AlbumList_Activity.this, PictureListActivity.class);
-                intent.putExtra("id", position+1);
+                intent.putExtra("id", position + 1);
                 startActivity(intent);
             }
         });
@@ -101,7 +102,14 @@ public class AlbumList_Activity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete) {
+
+            Realm realm = Realm.getDefaultInstance();
+            realm.executeTransactionAsync(realm1 -> {
+                final RealmResults<Album> results = realm1.where(Album.class).findAll();
+                results.deleteAllFromRealm();
+
+            });
             return true;
         }
 
@@ -159,8 +167,8 @@ public class AlbumList_Activity extends AppCompatActivity
             case R.id.map:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 Intent intent = new Intent(AlbumList_Activity.this, AlbumMapsActivity.class);
-                intent.putExtra("id", info.position+1);
-                intent.putExtra("kind",0);
+                intent.putExtra("id", info.position + 1);
+                intent.putExtra("kind", 0);
                 startActivity(intent);
                 return true;
         }

@@ -51,7 +51,7 @@ public class Album_Insert {
 
     }
 
-    public void Insert_Picture_Info(int keyWordCondition,String date,int dateCondition){
+    public void Insert_Picture_Info(int keyWordCondition,String date,String date1,int dateCondition){
 
         Realm r = Realm.getDefaultInstance();
         r.beginTransaction();
@@ -63,7 +63,7 @@ public class Album_Insert {
         alba=alba.sort("album_id", Sort.DESCENDING);
         int id=alba.get(0).getAlbum_id();
         Album album=r.where(Album.class).equalTo("album_id",id).findFirst();
-        RealmList<Picture_Info> picture_infos=query.Relation_Album(album,keyWordCondition,date,dateCondition);
+        RealmList<Picture_Info> picture_infos=query.Relation_Album(album,keyWordCondition,date,date1,dateCondition);
         album.setPicture_infos(picture_infos);
 
         r.commitTransaction();

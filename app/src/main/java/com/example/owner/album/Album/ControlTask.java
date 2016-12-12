@@ -28,18 +28,20 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     private String albumName;
     private int keyWordCondition;
     private String date;
+    private String date1;
     private int dateCondition;
     private Activity mActivity;
 
 
-    public ControlTask(ArrayList<String> keywords, String albumName, int keyWordCondition, String date, int dateCondition,Activity activity) {
+    public ControlTask(ArrayList<String> keywords, String albumName, int keyWordCondition, String date, String date1, int dateCondition, Activity activity) {
         this.keywords = keywords;
         this.albumName = albumName;
         this.keyWordCondition = keyWordCondition;
         this.date = date;
+
         this.dateCondition = dateCondition;
         this._latch = new CountDownLatch(keywords.size() * 2);
-        mActivity=activity;
+        mActivity = activity;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
 
         try {
             Album_Insert album_insert = new Album_Insert();
-            album_insert.Insert_DB(albumName,keywords,_latch);
+            album_insert.Insert_DB(albumName, keywords, _latch);
             Keyword_Query keyword_query = new Keyword_Query();
 
             for (String keyword : keywords) {
@@ -61,22 +63,22 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
                 if (realmResults.size() != 0) {
                     RealmList<Related_Words> realmList = realmResults.get(0).getRelated_wordses();
                     if (realmList.size() == 0) {
-                        new Word_association(keyword,_latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        new Word_association(keyword, _latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                     }
                 } else {
-                    new Word_association(keyword,_latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new Word_association(keyword, _latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     ;
                 }
             }
 
-            Log.d("db","wait");
+            Log.d("db", "wait");
             _latch.await(5, TimeUnit.SECONDS);
-            Log.d("db","related");
-            _latch=new CountDownLatch(1);
-            new Album_Related(keyWordCondition, date, dateCondition,_latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Log.d("db", "related");
+            _latch = new CountDownLatch(1);
+            new Album_Related(keyWordCondition, date, date1, dateCondition, _latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             _latch.await(5, TimeUnit.SECONDS);
-            Log.d("db","finish");
+            Log.d("db", "finish");
             return true;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -88,7 +90,7 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        Log.d("db","seni");
+        Log.d("db", "seni");
         mActivity.startActivity(new Intent(mActivity, AlbumList_Activity.class));
     }
 }

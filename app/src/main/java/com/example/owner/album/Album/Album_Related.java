@@ -15,12 +15,14 @@ import java.util.concurrent.TimeUnit;
 public class Album_Related extends AsyncTask<Void, Void, Boolean> {
     private int keyWordCondition;
     private String date;
+    private String date1;
     private int dateCondition;
     private CountDownLatch _latch;
 
-    public Album_Related(int keyWordCondition, String date, int dateCondition, CountDownLatch _latch) {
+    public Album_Related(int keyWordCondition, String date, String date1, int dateCondition, CountDownLatch _latch) {
         this.keyWordCondition = keyWordCondition;
         this.date = date;
+        this.date1 = date1;
         this.dateCondition = dateCondition;
         this._latch = _latch;
     }
@@ -33,7 +35,7 @@ public class Album_Related extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        new Album_Insert().Insert_Picture_Info(keyWordCondition, date, dateCondition);
+        new Album_Insert().Insert_Picture_Info(keyWordCondition, date, date1, dateCondition);
         return false;
     }
 
