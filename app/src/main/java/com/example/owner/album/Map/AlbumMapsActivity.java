@@ -48,7 +48,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
     private ArrayList<Double> latitude;
     private ArrayList<Bitmap> bitmaps;
     private ArrayList<String> bitmap_path;
-    private ArrayList<String> landmark;
     private int index = 0;
     private MyApplication app;
 
@@ -66,7 +65,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
                 RealmResults<Album> album = new Album_Query().Get_Album(id);
                 latitude = new ArrayList<>();
                 longitude = new ArrayList<>();
-                landmark = new ArrayList<>();
                 ArrayList<String> path=new ArrayList<>();
                 for (Picture_Info pictureInfo : album.get(0).getPicture_infos()) {
                     String Longitude = pictureInfo.getLongitude();
@@ -74,12 +72,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
                     if (Latitude!=null && Longitude!=null) {
                         longitude.add(Double.parseDouble(Longitude));
                         latitude.add(Double.parseDouble(Latitude));
-                        String Landmark = pictureInfo.getLandmark_jap();
-                        if (!"".equals(Landmark)) {
-                            landmark.add(Landmark);
-                        } else {
-                            landmark.add("");
-                        }
                         path.add(pictureInfo.getPath());
                     }
                 }
@@ -87,7 +79,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             } else {
                 latitude = new ArrayList<>();
                 longitude = new ArrayList<>();
-                landmark = new ArrayList<>();
                 ArrayList<String> path = new ArrayList<>();
                 ArrayList<String> youso;
                 youso = new Picture_Query().Get_Picture_Info(id);
@@ -96,12 +87,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
                 if (Latitude!=null && Longitude!=null) {
                     latitude.add(Double.parseDouble(Latitude));
                     longitude.add(Double.parseDouble(Longitude));
-                    String Landmark = youso.get(2);
-                    if (!"".equals(Landmark)) {
-                        landmark.add(Landmark);
-                    } else {
-                        landmark.add("");
-                    }
                     path.add(youso.get(3));
                 }
                 GetBitmap(path);
@@ -110,7 +95,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             Realm r = Realm.getDefaultInstance();
             latitude = new ArrayList<>();
             longitude = new ArrayList<>();
-            landmark = new ArrayList<>();
             ArrayList<String> path = new ArrayList<>();
             RealmResults<Picture_Info> picture_infos = new Picture_Query().Id_Query();
             RealmList<Picture_Info> picture_infos1 = new RealmList<>();
@@ -121,12 +105,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
                 if (Latitude!=null && Longitude!=null) {
                     longitude.add(Double.parseDouble(Longitude));
                     latitude.add(Double.parseDouble(Latitude));
-                    String Landmark = pictureInfo.getLandmark_jap();
-                    if (!"".equals(Landmark)) {
-                        landmark.add(Landmark);
-                    } else {
-                        landmark.add("");
-                    }
                     path.add(pictureInfo.getPath());
                 }
             }
@@ -159,9 +137,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             public View getInfoContents(Marker marker) {
 
                 View view = getLayoutInflater().inflate(R.layout.info_window, null);
-                // タイトル設定
-                TextView title = (TextView) view.findViewById(R.id.info_title);
-                title.setText(marker.getTitle());
                 // 画像設定
                 ImageView imageview = (ImageView) view.findViewById(R.id.imageView3);
                 imageview.setImageBitmap(bitmaps.get(index));
@@ -201,10 +176,6 @@ public class AlbumMapsActivity extends FragmentActivity implements OnMapReadyCal
             LatLng location = new LatLng(latitude.get(i), longitude.get(i));
             MarkerOptions options = new MarkerOptions();
             options.position(location);
-            String Landmark = landmark.get(i);
-            if (!"".equals(Landmark)) {
-                options.title(Landmark);
-            }
             Marker marker = mMap.addMarker(options);
 
         }

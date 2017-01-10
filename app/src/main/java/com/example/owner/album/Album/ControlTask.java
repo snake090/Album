@@ -1,6 +1,7 @@
 package com.example.owner.album.Album;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,7 +23,7 @@ import io.realm.RealmResults;
  * Created by Owner on 2016/11/17.
  */
 
-public class ControlTask extends AsyncTask<Void, Void, Boolean> {
+public class ControlTask extends AsyncTask<Void, Integer, Boolean> {
     private CountDownLatch _latch;
     private ArrayList<String> keywords = new ArrayList<>();
     private String albumName;
@@ -31,6 +32,7 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     private String date1;
     private int dateCondition;
     private Activity mActivity;
+    private ProgressDialog dialog;
 
 
     public ControlTask(ArrayList<String> keywords, String albumName, int keyWordCondition, String date, String date1, int dateCondition, Activity activity) {
@@ -38,7 +40,7 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
         this.albumName = albumName;
         this.keyWordCondition = keyWordCondition;
         this.date = date;
-
+        this.date1 = date1;
         this.dateCondition = dateCondition;
         this._latch = new CountDownLatch(keywords.size() * 2);
         mActivity = activity;
@@ -47,7 +49,13 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // プログレス表示処理
+        dialog = new ProgressDialog(mActivity);
+        dialog.setTitle("Please wait");
+        dialog.setMessage("Creating album...");
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setMax(100);
+        dialog.setProgress(0);
+        dialog.show();
     }
 
     @Override
@@ -68,9 +76,10 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
                     }
                 } else {
                     new Word_association(keyword, _latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    ;
+
                 }
             }
+            publishProgress(50);
 
             Log.d("db", "wait");
             _latch.await(5, TimeUnit.SECONDS);
@@ -79,6 +88,7 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
             new Album_Related(keyWordCondition, date, date1, dateCondition, _latch).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             _latch.await(5, TimeUnit.SECONDS);
             Log.d("db", "finish");
+            publishProgress(100);
             return true;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -88,9 +98,15 @@ public class ControlTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     @Override
+    protected void onProgressUpdate(Integer... values) {
+        dialog.setProgress(values[0]);
+    }
+
+    @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
         Log.d("db", "seni");
         mActivity.startActivity(new Intent(mActivity, AlbumList_Activity.class));
     }
+
 }

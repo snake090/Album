@@ -3,10 +3,7 @@
 
     <group android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+
         <item
             android:id="@+id/nav_album"
             android:icon="@drawable/ic_photo_album_black_24dp"

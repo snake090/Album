@@ -129,7 +129,6 @@ public class Album_Create_Activity extends AppCompatActivity
                 int ResearchCondition=reserchCondition.getSelectedItemPosition();
                 int DateConditon=Get_datecondition(date.getText().toString(),date1.getText().toString());
                 new ControlTask(keywords,albumName,ResearchCondition,date.getText().toString(),date1.getText().toString(),DateConditon,Album_Create_Activity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                Toast.makeText(this,"Create_album",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Enter album name or keyword",Toast.LENGTH_LONG).show();
             }

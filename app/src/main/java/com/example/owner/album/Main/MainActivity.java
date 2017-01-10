@@ -220,11 +220,10 @@ public class MainActivity extends AppCompatActivity
                 longitude = exif.ExifHourMinSecToDegrees(longitude);
             }
 
-            Picture_Insert.Insert_Picture(this,file.getPath(), dateTime, latitude, longitude);
+            Picture_Insert.Insert_Picture(this, file.getPath(), dateTime, latitude, longitude);
 
         }
     }
-
 
 
     //cloudvision
@@ -237,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
                                 1200);
 
-                CloudVision_Landmark cloudVision_landmark=new CloudVision_Landmark();
+                CloudVision_Landmark cloudVision_landmark = new CloudVision_Landmark();
                 cloudVision_landmark.callCloudVision(bitmap);
                 callCloudVision(bitmap);
 
@@ -475,7 +474,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
             deleteBookShelf();
-        }else if(id==R.id.action_create_album) {
+        } else if (id == R.id.action_create_album) {
 
             Intent intent;
 
@@ -494,9 +493,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_album) {
+        if (id == R.id.nav_album) {
             Intent intent;
             intent = new Intent(MainActivity.this, AlbumList_Activity.class);
             startActivity(intent);
@@ -504,7 +501,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(MainActivity.this, AlbumMapsActivity.class);
             intent.putExtra("id", -1);
-            intent.putExtra("kind",-1);
+            intent.putExtra("kind", -1);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
 

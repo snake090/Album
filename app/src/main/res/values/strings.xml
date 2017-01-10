@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Album</string>
+    <string name="app_name">Gallery</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -11,7 +11,7 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Map</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_album__create_">Album_Create_Activity</string>
+    <string name="title_activity_album__create_"></string>
 
     <string name="action_settings">Settings</string>
 
@@ -26,7 +26,7 @@
         <item>OR Search</item>
 
     </string-array>
-    <string name="title_activity_album_list_">AlbumList_Activity</string>
+    <string name="title_activity_album_list_">Album</string>
 
     <string name="menu_remove">Remove</string>
     <string name="content_open_popup">Open Popup Menu</string>

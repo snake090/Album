@@ -42,7 +42,9 @@
         <activity
             android:name=".Album.Album_Create_Activity"
             android:label="@string/title_activity_album__create_"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".Album.AlbumList_Activity"
             android:label="@string/title_activity_album_list_"
